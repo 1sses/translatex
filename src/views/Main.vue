@@ -104,18 +104,12 @@ export default {
       }
     },
     confirmLoading () {
-      console.log('LOADING: ', this.enFile?.raw, this.ruFile?.raw)
-
-      const reader = new FileReader()
-      reader.readAsText(this.enFile.raw)
-
-      reader.onload = function () {
-        console.log(reader.result.split('\n').length)
-        console.log(reader.result)
-      }
-      reader.onerror = function () {
-        console.log(reader.error)
-      }
+      this.$store.dispatch('setEn', this.enFile.raw)
+      this.$store.dispatch('setRu', this.ruFile?.raw)
+      this.$store.dispatch('setPreset', this.preset)
+      // store.dispatch('setEn', this.enFile.raw)
+      // store.dispatch('setRu', this.ruFile?.raw)
+      // store.dispatch('setPreset', this.preset)
 
       this.dialog = false
     }

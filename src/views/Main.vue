@@ -1,6 +1,5 @@
 <template>
-  <el-input placeholder="Hello" v-model="text" class="input" />
-  <el-button>Hello</el-button>
+  translations will be here
 </template>
 
 <script>
@@ -15,8 +14,5 @@ export default {
 </script>
 
 <style>
-.input {
-  width: 200px;
-  margin-right: 1rem;
-}
+
 </style>

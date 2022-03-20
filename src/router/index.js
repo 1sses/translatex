@@ -1,11 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Main from '@/views/Main'
 
 const routes = [
   {
     path: '/',
     name: 'Main',
-    component: Main
+    component: () => import('@/views/Main')
+  },
+  {
+    path: '/compare',
+    name: 'Compare',
+    component: () => import('@/views/Compare')
   }
 ]
 

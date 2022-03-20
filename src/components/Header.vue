@@ -30,8 +30,4 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-
-.tabs > .el-tabs__content {
-  display: none !important;
-}
 </style>

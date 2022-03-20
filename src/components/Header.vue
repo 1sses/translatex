@@ -8,19 +8,16 @@
   </el-header>
 </template>
 
-<script>
-export default {
-  name: 'Header',
-  data () {
-    return {
-      activeName: location.pathname
-    }
-  },
-  methods: {
-    handleClick (tab) {
-      this.$router.push(tab.props.name)
-    }
-  }
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const activeName = ref(location.pathname)
+
+const router = useRouter()
+
+const handleClick = (tab) => {
+  router.push(tab.props.name)
 }
 </script>
 

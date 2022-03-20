@@ -22,7 +22,7 @@
           action="https://jsonplaceholder.typicode.com/posts/"
           :limit="1"
           :auto-upload="false"
-          :file-list="enFileRaw"
+          :file-list="filesState.enFileRaw"
           :on-change="handleEnFileCheck"
         >
           <el-icon :size="40" :color="enFile ? '#67C23A' : ''"><upload-filled /></el-icon>
@@ -38,7 +38,7 @@
           action="https://jsonplaceholder.typicode.com/posts/"
           :limit="1"
           :auto-upload="false"
-          :file-list="ruFileRaw"
+          :file-list="filesState.ruFileRaw"
           :on-change="handleRuFileCheck"
         >
           <el-icon :size="40" :color="ruFile ? '#67C23A' : ''"><upload-filled /></el-icon>
@@ -51,7 +51,7 @@
         </el-upload>
       </el-row>
       <h3>Translate preset: </h3>
-      <el-radio-group v-model="preset">
+      <el-radio-group v-model="filesState.preset">
         <el-radio-button label="renpy">RenPy</el-radio-button>
         <el-radio-button label="none">None</el-radio-button>
       </el-radio-group>
@@ -65,55 +65,43 @@
   </el-container>
 </template>
 
-<script>
+<script setup>
+import { computed, reactive, ref } from 'vue'
+import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Plus, UploadFilled } from '@element-plus/icons-vue'
 
 const ext = ['txt']
 
-export default {
-  name: 'Main',
-  components: { Plus, UploadFilled },
-  data () {
-    return {
-      dialog: false,
-      preset: 'none',
-      enFileRaw: [],
-      ruFileRaw: []
-    }
-  },
-  computed: {
-    enFile () {
-      return this.enFileRaw[0]
-    },
-    ruFile () {
-      return this.ruFileRaw[0]
-    }
-  },
-  methods: {
-    handleEnFileCheck (file) {
-      if (!~ext.indexOf(file.name.split('.').pop())) {
-        ElMessage.warning('Not allowed file format')
-        this.enFileRaw = []
-      }
-    },
-    handleRuFileCheck (file) {
-      if (!~ext.indexOf(file.name.split('.').pop())) {
-        ElMessage.warning('Not allowed file format')
-        this.ruFileRaw = []
-      }
-    },
-    confirmLoading () {
-      this.$store.dispatch('setEn', this.enFile.raw)
-      this.$store.dispatch('setRu', this.ruFile?.raw)
-      this.$store.dispatch('setPreset', this.preset)
-      // store.dispatch('setEn', this.enFile.raw)
-      // store.dispatch('setRu', this.ruFile?.raw)
-      // store.dispatch('setPreset', this.preset)
+const dialog = ref(false)
+const filesState = reactive({
+  enFileRaw: [],
+  ruFileRaw: [],
+  preset: 'none'
+})
 
-      this.dialog = false
-    }
+const store = useStore()
+
+const enFile = computed(() => filesState.enFileRaw[0])
+const ruFile = computed(() => filesState.ruFileRaw[0])
+
+const handleEnFileCheck = (file) => {
+  if (!~ext.indexOf(file.name.split('.').pop())) {
+    ElMessage.warning('Not allowed file format')
+    filesState.enFileRaw = []
   }
+}
+const handleRuFileCheck = (file) => {
+  if (!~ext.indexOf(file.name.split('.').pop())) {
+    ElMessage.warning('Not allowed file format')
+    filesState.ruFileRaw = []
+  }
+}
+const confirmLoading = () => {
+  store.dispatch('setEn', enFile.value.raw)
+  store.dispatch('setRu', ruFile.value?.raw)
+  store.dispatch('setPreset', filesState.preset)
+  dialog.value = false
 }
 </script>
 

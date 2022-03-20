@@ -8,7 +8,7 @@ export default {
   },
   getters: {
     en: state => state.en,
-    geu: state => state.ru,
+    ru: state => state.ru,
     preset: state => state.preset
   },
   mutations: {

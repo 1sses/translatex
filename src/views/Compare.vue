@@ -2,10 +2,8 @@
   compare will be here
 </template>
 
-<script>
-export default {
-  name: 'Compare'
-}
+<script setup>
+
 </script>
 
 <style scoped>

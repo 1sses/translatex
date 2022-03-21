@@ -20,6 +20,15 @@ export default {
     },
     setPreset (state, value) {
       state.preset = value
+    },
+    resetEn (state) {
+      state.en = []
+    },
+    resetRu (state) {
+      state.ru = []
+    },
+    resetPreset (state) {
+      state.preset = 'none'
     }
   },
   actions: {

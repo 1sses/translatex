@@ -1,5 +1,5 @@
 <template>
-  compare will be here
+  <h1>COMPARE</h1>
 </template>
 
 <script setup>

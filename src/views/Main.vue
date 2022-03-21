@@ -30,8 +30,8 @@
       <el-row class="controls">
         <el-button size="large" @click="confirmLine" :disabled="enFile.length === 0">Confirm line</el-button>
         <el-button-group size="large">
-          <el-button :icon="ArrowLeft" :disabled="currentIndex === 0" />
-          <el-button :icon="ArrowRight" :disabled="false" />
+          <el-button :icon="ArrowLeft" :disabled="currentIndex === 0" @click="backHandler" />
+          <el-button :icon="ArrowRight" :disabled="!bufferTranslatedData.length" @click="forwardHandler" />
         </el-button-group>
       </el-row>
       <el-row class="stats">
@@ -39,7 +39,7 @@
       </el-row>
       <el-row class="table">
         <h2>Last translated:</h2>
-        <el-table :data="tableData">
+        <el-table :data="latestLines">
           <el-table-column prop="line" label="Number" width="100" />
           <el-table-column prop="text" label="Text" />
         </el-table>
@@ -50,19 +50,16 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { useStore } from 'vuex'
 import { Files, ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 import TranslatableFilesDialog from '@/components/TranslatableFilesDialog'
-import { useStore } from 'vuex'
-
-const tableData = [
-  { line: 1, text: 'Hello' },
-  { line: 2, text: 'World this is my harboro jhsdf ksjdksj hbdfjs bfkjs dfbsdbjs ckjhlasjkas kjhs hk sbsd bd bksb ds dkjbks ds adhfhsdfh' },
-  { line: 33, text: 'dhcsjkdh kjh kjldhgjkd fhgjksdfh kjhsdfjk ghkjdhgdhsfhds hd sjkdhf kjdh k kjjk sjkdfhjdskfhkjasd hkasdhfk j sdhhasd hksd s sdfsk jfhsjkdhf kjsdhfkh asdkjfh jkhsdafjkhjkasdh kfjhasd kjfhsdkahfkj hdfhasdhfh kjsdhf kjhfh hfk hsdkf hkjsdhfkjlasdhfjkh kjsdafjkh kjsdhkfhjkasdhf sdjkfhskjhfkjasdhf kjsdhfka' }
-]
 
 const dialog = ref(false)
-
 const currentIndex = ref(0)
+const resultedLine = ref('')
+
+const translatedData = ref([])
+const bufferTranslatedData = ref([])
 
 const store = useStore()
 
@@ -72,15 +69,32 @@ const preset = computed(() => store.getters.preset)
 
 const currentEnLine = computed(() => enFile.value[currentIndex.value] ?? '')
 const currentRuLine = computed(() => ruFile.value[currentIndex.value] ?? '')
+const latestLines = computed(() => translatedData.value.slice(-10))
 
-const resultedLine = ref('')
 watch(currentRuLine, () => {
   // here is logic for translating
-  console.log('updating resulted line: ', currentRuLine.value)
   resultedLine.value = currentRuLine.value
 })
 
+const backHandler = () => {
+  bufferTranslatedData.value.push(translatedData.value.pop())
+  currentIndex.value--
+  resultedLine.value = currentRuLine.value
+  console.log(bufferTranslatedData.value)
+}
+
+const forwardHandler = () => {
+  translatedData.value.push(bufferTranslatedData.value.pop())
+  currentIndex.value++
+  resultedLine.value = currentRuLine.value
+}
+
 const confirmLine = () => {
+  translatedData.value.push({
+    line: currentIndex.value,
+    text: resultedLine.value
+  })
+  bufferTranslatedData.value.pop()
   resultedLine.value = ''
   currentIndex.value++
 }

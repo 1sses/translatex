@@ -44,7 +44,10 @@ export default {
       }
     },
     setRu ({ commit }, file) {
-      if (!file) return
+      if (!file) {
+        commit('setRu', [])
+        return
+      }
       const reader = new FileReader()
       reader.readAsText(file)
 

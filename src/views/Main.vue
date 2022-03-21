@@ -13,15 +13,19 @@
     </el-button>
     <TranslatableFilesDialog v-model="dialog" />
     <el-col>
-<!--      <h2><span style="color: red">Manual</span> translation mode</h2>-->
-<!--      <h2 v-if="false"><span style="color: green">Automatic</span> translation mode</h2>-->
       <h3>English line:</h3>
       <el-input class="line-field" :model-value="currentEnLine" size="large" disabled>
         <template #prepend>{{currentEnLine.length}}</template>
+        <template #append>
+          <el-button :icon="Aim" style="margin-bottom: 4px;" @click="setResult(currentEnLine)" />
+        </template>
       </el-input>
       <h3>Russian line:</h3>
       <el-input class="line-field" :model-value="currentRuLine" size="large" disabled>
         <template #prepend>{{currentRuLine.length}}</template>
+        <template #append>
+          <el-button :icon="Aim" style="margin-bottom: 4px;" @click="setResult(currentRuLine)" />
+        </template>
       </el-input>
       <h2>In result:</h2>
       <el-input class="line-field" v-model="resultedLine" size="large">
@@ -35,9 +39,18 @@
         </el-button-group>
       </el-row>
       <el-row class="stats">
-        <h2>Lines done: {{currentIndex}}/{{enFile.length}}</h2>
+        <el-col>
+          <h3>Lines done: {{currentIndex}}/{{enFile.length}}</h3>
+          <h3 v-if="enFile.length">
+            Mode:
+            <span :style="{color: ruFile.length ? 'green' : 'red'}">
+              {{ruFile.length ? 'automatic' : 'manual'}}
+            </span>
+          </h3>
+          <h3>Preset: <span style="color: #409eff">{{preset}}</span></h3>
+        </el-col>
       </el-row>
-      <el-row class="table">
+      <el-row>
         <h2>Last translated:</h2>
         <el-table :data="latestLines">
           <el-table-column prop="line" label="Number" width="100" />
@@ -51,7 +64,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import { Files, ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
+import { Files, ArrowLeft, ArrowRight, Aim } from '@element-plus/icons-vue'
 import TranslatableFilesDialog from '@/components/TranslatableFilesDialog'
 
 const dialog = ref(false)
@@ -76,11 +89,14 @@ watch(currentRuLine, () => {
   resultedLine.value = currentRuLine.value
 })
 
+const setResult = (value) => {
+  resultedLine.value = value
+}
+
 const backHandler = () => {
   bufferTranslatedData.value.push(translatedData.value.pop())
   currentIndex.value--
   resultedLine.value = currentRuLine.value
-  console.log(bufferTranslatedData.value)
 }
 
 const forwardHandler = () => {
@@ -112,14 +128,14 @@ const confirmLine = () => {
   font-size: 18px;
 }
 
+.stats {
+  margin-top: 20px;
+}
+
 .controls {
   display: flex;
   justify-content: space-between;
   width: 250px;
-  margin-top: 40px;
-}
-
-.table {
   margin-top: 40px;
 }
 </style>

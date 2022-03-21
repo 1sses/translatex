@@ -27,15 +27,33 @@
       <el-input class="line-field" v-model="resultLine" size="large">
         <template #prepend>{{resultLine.length}}</template>
       </el-input>
+      <el-row class="controls">
+        <el-button size="large">Confirm line</el-button>
+        <el-button-group size="large">
+          <el-button :icon="ArrowLeft" :disabled="false" />
+          <el-button :icon="ArrowRight" :disabled="false" />
+        </el-button-group>
+      </el-row>
+      <el-row class="table">
+        <el-table :data="tableData">
+          <el-table-column prop="line" label="Number" width="100" />
+          <el-table-column prop="text" label="Text" />
+        </el-table>
+      </el-row>
     </el-col>
-
   </el-container>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { Files } from '@element-plus/icons-vue'
+import { Files, ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
 import TranslatableFilesDialog from '@/components/TranslatableFilesDialog'
+
+const tableData = [
+  { line: 1, text: 'Hello' },
+  { line: 2, text: 'World this is my harboro jhsdf ksjdksj hbdfjs bfkjs dfbsdbjs ckjhlasjkas kjhs hk sbsd bd bksb ds dkjbks ds adhfhsdfh' },
+  { line: 33, text: 'dhcsjkdh kjh kjldhgjkd fhgjksdfh kjhsdfjk ghkjdhgdhsfhds hd sjkdhf kjdh k kjjk sjkdfhjdskfhkjasd hkasdhfk j sdhhasd hksd s sdfsk jfhsjkdhf kjsdhfkh asdkjfh jkhsdafjkhjkasdh kfjhasd kjfhsdkahfkj hdfhasdhfh kjsdhf kjhfh hfk hsdkf hkjsdhfkjlasdhfjkh kjsdafjkh kjsdhkfhjkasdhf sdjkfhskjhfkjasdhf kjsdhfka' }
+]
 
 const dialog = ref(false)
 const enLine = ref('')
@@ -52,5 +70,16 @@ const resultLine = ref('')
 
 .line-field {
   font-size: 18px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  width: 250px;
+  margin-top: 40px;
+}
+
+.table {
+  margin-top: 40px;
 }
 </style>

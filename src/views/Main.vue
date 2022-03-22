@@ -47,7 +47,7 @@
               {{ruFile.length ? 'automatic' : 'manual'}}
             </span>
           </h3>
-          <h3>Preset: <span style="color: #409eff">{{preset}}</span></h3>
+          <h3>Preset: <span style="color: #409eff">{{presets[preset]}}</span></h3>
         </el-col>
       </el-row>
       <el-row>
@@ -66,6 +66,7 @@ import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { Files, ArrowLeft, ArrowRight, Aim } from '@element-plus/icons-vue'
 import TranslatableFilesDialog from '@/components/TranslatableFilesDialog'
+import presets from '@/data/presets'
 
 const dialog = ref(false)
 const currentIndex = ref(0)

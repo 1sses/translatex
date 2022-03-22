@@ -47,8 +47,7 @@
     </el-row>
     <h3>Translate preset: </h3>
     <el-radio-group v-model="filesState.preset">
-      <el-radio-button label="renpy">RenPy</el-radio-button>
-      <el-radio-button label="none">None</el-radio-button>
+      <el-radio-button v-for="(preset, key) in presets" :label="key" :key="key">{{preset}}</el-radio-button>
     </el-radio-group>
     <template #footer>
       <el-row justify="space-between">
@@ -71,6 +70,7 @@ import { computed, reactive, defineProps, defineEmits } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Refresh, UploadFilled } from '@element-plus/icons-vue'
+import presets from '@/data/presets'
 
 const ext = ['txt']
 

@@ -1,5 +1,5 @@
 <template>
-  <h1>ANALYSIS</h1>
+  <h1>COMPARE</h1>
 </template>
 
 <script setup>

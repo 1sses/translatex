@@ -7,6 +7,11 @@ const routes = [
     component: () => import('@/views/Main')
   },
   {
+    path: '/analyse',
+    name: 'Analysis',
+    component: () => import('@/views/Analysis')
+  },
+  {
     path: '/compare',
     name: 'Compare',
     component: () => import('@/views/Compare')

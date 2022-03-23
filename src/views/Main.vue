@@ -52,6 +52,7 @@
       </el-row>
       <GlobalTranslateControls
         :en-file-length="enFile.length"
+        :work-ended="currentIndex === enFile.length"
         @save-work="saveWork"
         @jump-to-line="jumpToLine"
       />
@@ -122,8 +123,8 @@ const confirmLine = () => {
   currentIndex.value++
 }
 
-const saveWork = () => {
-  console.log('save work')
+const saveWork = (shouldSplitFiles, filename) => {
+  console.log('save work', shouldSplitFiles, filename)
 }
 
 const jumpToLine = (line) => {

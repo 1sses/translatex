@@ -3,13 +3,15 @@ export default {
     return {
       en: [],
       ru: [],
-      preset: 'none'
+      preset: 'none',
+      currentIndex: 0
     }
   },
   getters: {
     en: state => state.en,
     ru: state => state.ru,
-    preset: state => state.preset
+    preset: state => state.preset,
+    currentIndex: state => state.currentIndex
   },
   mutations: {
     setEn (state, value) {
@@ -21,6 +23,9 @@ export default {
     setPreset (state, value) {
       state.preset = value
     },
+    setCurrentIndex (state, value) {
+      state.currentIndex = value
+    },
     resetEn (state) {
       state.en = []
     },
@@ -29,6 +34,9 @@ export default {
     },
     resetPreset (state) {
       state.preset = 'none'
+    },
+    resetCurrentIndex (state) {
+      state.currentIndex = 0
     }
   },
   actions: {
@@ -60,6 +68,9 @@ export default {
     },
     setPreset ({ commit }, value) {
       commit('setPreset', value)
+    },
+    setCurrentIndex ({ commit }, value) {
+      commit('setCurrentIndex', value)
     }
   }
 }

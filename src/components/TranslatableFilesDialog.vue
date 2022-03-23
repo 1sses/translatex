@@ -117,6 +117,8 @@ const checkFilesAfterLoading = () => {
       ElMessage.error('Files have different length! It may cause an error!')
       filesState.enFileRaw = []
       filesState.ruFileRaw = []
+      store.commit('resetEn')
+      store.commit('resetRu')
     } else {
       dialog.value = false
     }
@@ -126,6 +128,7 @@ const confirmLoading = () => {
   store.dispatch('setEn', enFile.value.raw)
   store.dispatch('setRu', ruFile.value?.raw)
   store.dispatch('setPreset', filesState.preset)
+  store.dispatch('setCurrentIndex', 0)
   checkFilesAfterLoading()
 }
 const resetState = () => {
@@ -135,6 +138,7 @@ const resetState = () => {
   store.commit('resetEn')
   store.commit('resetRu')
   store.commit('resetPreset')
+  store.commit('resetCurrentIndex')
 }
 </script>
 

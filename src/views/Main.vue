@@ -72,7 +72,6 @@ import LastTranslatedTable from '@/components/LastTranslatedTable'
 import presets from '@/data/presets'
 
 const dialog = ref(false)
-const currentIndex = ref(0)
 const resultedLine = ref('')
 
 const translatedData = ref([])
@@ -83,6 +82,10 @@ const store = useStore()
 const enFile = computed(() => store.getters.en)
 const ruFile = computed(() => store.getters.ru)
 const preset = computed(() => store.getters.preset)
+const currentIndex = computed({
+  get: () => store.getters.currentIndex,
+  set: (value) => store.commit('setCurrentIndex', value)
+})
 
 const currentEnLine = computed(() => enFile.value[currentIndex.value] ?? '')
 const currentRuLine = computed(() => ruFile.value[currentIndex.value] ?? '')

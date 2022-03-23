@@ -55,32 +55,12 @@
           <h3>Preset: <span style="color: #409eff">{{presets[preset]}}</span></h3>
         </el-col>
       </el-row>
-      <el-row>
-        <el-button type="primary" :icon="Download" @click="saveWork">Save work</el-button>
-        <el-button type="primary" :icon="EditPen" @click="jumpToLineDialogHandler">Continue from line</el-button>
-        <el-dialog
-          v-model="jumpDialog"
-          width="400px"
-        >
-          <template #title>
-            <h2 class="dialog-header">Continue work from line</h2>
-          </template>
-          <el-input-number v-model="jumpNumber" :min="1" :max="enFile.length - 1" />
-          <template #footer>
-            <span class="dialog-footer">
-              <el-button @click="jumpDialog = false">Cancel</el-button>
-              <el-button type="primary" @click="jumpToLine">Confirm</el-button>
-            </span>
-          </template>
-        </el-dialog>
-      </el-row>
-      <el-row>
-        <h2>Last translated:</h2>
-        <el-table :data="latestLines">
-          <el-table-column prop="line" label="Number" width="100" />
-          <el-table-column prop="text" label="Text" />
-        </el-table>
-      </el-row>
+      <GlobalTranslateControls
+        :en-file-length="enFile.length"
+        @save-work="saveWork"
+        @jump-to-line="jumpToLine"
+      />
+      <LastTranslatedTable :latest-lines="latestLines" />
     </el-col>
   </el-container>
 </template>
@@ -88,14 +68,14 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import { Files, ArrowLeft, ArrowRight, Aim, Download, EditPen } from '@element-plus/icons-vue'
-import TranslatableFilesDialog from '@/components/TranslatableFilesDialog'
-import presets from '@/data/presets'
 import { ElMessage } from 'element-plus'
+import { Files, ArrowLeft, ArrowRight, Aim } from '@element-plus/icons-vue'
+import TranslatableFilesDialog from '@/components/TranslatableFilesDialog'
+import GlobalTranslateControls from '@/components/GlobalTranslateControls'
+import LastTranslatedTable from '@/components/LastTranslatedTable'
+import presets from '@/data/presets'
 
 const dialog = ref(false)
-const jumpDialog = ref(false)
-const jumpNumber = ref(1)
 const currentIndex = ref(0)
 const resultedLine = ref('')
 
@@ -150,26 +130,21 @@ const saveWork = () => {
   console.log('save work')
 }
 
-const jumpToLineDialogHandler = () => {
-  jumpDialog.value = true
-}
-
-const jumpToLine = () => {
-  console.log('jump to line', jumpNumber.value)
+const jumpToLine = (line) => {
+  console.log('jump to line', line)
   if (!enFile.value.length) {
     ElMessage.error('You have to load English file first')
     return
   }
-  if (jumpNumber.value > enFile.value.length) {
+  if (line > enFile.value.length) {
     ElMessage.error('Line number is too big')
     return
   }
-  if (jumpNumber.value < currentIndex.value) {
+  if (line < currentIndex.value) {
     ElMessage.error('Line number is less than current line')
     return
   }
-  currentIndex.value = jumpNumber.value
-  jumpDialog.value = false
+  currentIndex.value = line
 }
 </script>
 

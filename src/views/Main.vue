@@ -13,20 +13,15 @@
     </el-button>
     <TranslatableFilesDialog v-model="dialog" />
     <el-col>
-      <h3>English line:</h3>
-      <el-input class="line-field" :model-value="currentEnLine" size="large" disabled>
-        <template #prepend>{{currentEnLine.length}}</template>
-        <template #append>
-          <el-button :icon="Aim" style="margin-bottom: 4px;" @click="setResult(currentEnLine)" />
-        </template>
-      </el-input>
-      <h3>Russian line:</h3>
-      <el-input class="line-field" :model-value="currentRuLine" size="large" disabled>
-        <template #prepend>{{currentRuLine.length}}</template>
-        <template #append>
-          <el-button :icon="Aim" style="margin-bottom: 4px;" @click="setResult(currentRuLine)" />
-        </template>
-      </el-input>
+      <el-row v-for="input in [['English', currentEnLine], ['Russian', currentRuLine]]" :key="input[0]">
+        <h3>{{input[0]}} line:</h3>
+        <el-input class="line-field" :model-value="input[1]" size="large" disabled>
+          <template #prepend>{{input[1].length}}</template>
+          <template #append>
+            <el-button :icon="Aim" style="margin-bottom: 4px;" @click="setResult(input[1])" />
+          </template>
+        </el-input>
+      </el-row>
       <h2>In result:</h2>
       <el-input class="line-field" v-model="resultedLine" size="large">
         <template #prepend>{{resultedLine.length}}</template>
@@ -93,6 +88,7 @@ const currentRuLine = computed(() => ruFile.value[currentIndex.value] ?? '')
 const latestLines = computed(() => translatedData.value.slice(-10))
 
 watch(currentRuLine, () => {
+  // fix problems, cause lots of bugs!
   if (bufferTranslatedData.value.length) return
   // here is logic for translating
   resultedLine.value = currentRuLine.value
@@ -131,13 +127,8 @@ const saveWork = () => {
 }
 
 const jumpToLine = (line) => {
-  console.log('jump to line', line)
   if (!enFile.value.length) {
     ElMessage.error('You have to load English file first')
-    return
-  }
-  if (line > enFile.value.length) {
-    ElMessage.error('Line number is too big')
     return
   }
   if (line < currentIndex.value) {

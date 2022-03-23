@@ -72,7 +72,7 @@ import { ElMessage } from 'element-plus'
 import { Refresh, UploadFilled } from '@element-plus/icons-vue'
 import presets from '@/data/presets'
 
-const ext = ['txt']
+const ext = ['txt', 'rpy']
 
 const filesState = reactive({
   enFileRaw: [],

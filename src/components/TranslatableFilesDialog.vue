@@ -7,46 +7,16 @@
       <h2 class="dialog-header">Load files</h2>
     </template>
     <h3>Translatable files:</h3>
-    <el-row class="uploader" justify="space-evenly">
-      <el-upload
-        drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :limit="1"
-        :auto-upload="false"
-        :file-list="filesState.enFileRaw"
-        :on-change="handleEnFileCheck"
-      >
-        <el-icon :size="40" :color="enFile ? '#67C23A' : ''">
-          <upload-filled/>
-        </el-icon>
-        <div class="el-upload__text">Drop file here or<br> <em>click to upload</em></div>
-        <template #tip>
-          <div class="el-upload__tip">
-            Select english file
-          </div>
-        </template>
-      </el-upload>
-      <el-upload
-        drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :limit="1"
-        :auto-upload="false"
-        :file-list="filesState.ruFileRaw"
-        :on-change="handleRuFileCheck"
-      >
-        <el-icon :size="40" :color="ruFile ? '#67C23A' : ''">
-          <upload-filled/>
-        </el-icon>
-        <div class="el-upload__text"> Drop file here or<br> <em>click to upload</em></div>
-        <template #tip>
-          <div class="el-upload__tip">
-            Select russian file
-          </div>
-        </template>
-      </el-upload>
-    </el-row>
+    <FileDragUploader
+      :en-file-raw="enFileRaw"
+      :ru-file-raw="ruFileRaw"
+      :en-file-loaded="!!enFile"
+      :ru-file-loaded="!!ruFile"
+      @enFileChange="handleEnFileCheck"
+      @ruFileChange="handleRuFileCheck"
+    />
     <h3>Translate preset: </h3>
-    <el-radio-group v-model="filesState.preset">
+    <el-radio-group v-model="preset">
       <el-radio-button v-for="(preset, key) in presets" :label="key" :key="key">{{preset}}</el-radio-button>
     </el-radio-group>
     <template #footer>
@@ -66,24 +36,23 @@
 </template>
 
 <script setup>
-import { computed, reactive, defineProps, defineEmits } from 'vue'
+import { computed, defineProps, defineEmits, ref } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
-import { Refresh, UploadFilled } from '@element-plus/icons-vue'
+import { Refresh } from '@element-plus/icons-vue'
 import presets from '@/data/presets'
+import FileDragUploader from '@/components/FileDragUploader'
 
 const ext = ['txt', 'rpy']
 
-const filesState = reactive({
-  enFileRaw: [],
-  ruFileRaw: [],
-  preset: 'none'
-})
-
 const store = useStore()
 
-const enFile = computed(() => filesState.enFileRaw[0])
-const ruFile = computed(() => filesState.ruFileRaw[0])
+const enFileRaw = ref([])
+const ruFileRaw = ref([])
+const preset = ref('none')
+
+const enFile = computed(() => enFileRaw.value[0])
+const ruFile = computed(() => ruFileRaw.value[0])
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
@@ -97,26 +66,27 @@ const dialog = computed({
   }
 })
 
-const handleEnFileCheck = (file) => {
-  if (!~ext.indexOf(file.name.split('.').pop())) {
+const handleEnFileCheck = () => {
+  if (enFile.value && !~ext.indexOf(enFile.value.name.split('.').pop())) {
     ElMessage.warning('Not allowed file format')
-    filesState.enFileRaw = []
+    enFileRaw.value = []
   }
 }
-const handleRuFileCheck = (file) => {
-  if (!~ext.indexOf(file.name.split('.').pop())) {
+const handleRuFileCheck = () => {
+  if (ruFile.value && !~ext.indexOf(ruFile.value.name.split('.').pop())) {
     ElMessage.warning('Not allowed file format')
-    filesState.ruFileRaw = []
+    ruFileRaw.value = []
   }
 }
 const checkFilesAfterLoading = () => {
-  if (store.getters.en.length === 0) {
+  if (store.state.translatable.en.length === 0) {
     setTimeout(checkFilesAfterLoading, 100)
   } else {
-    if (store.getters.en.length !== store.getters.ru.length && store.getters.ru.length !== 0) {
+    if (store.state.translatable.en.length !== store.state.translatable.ru.length &&
+      store.state.translatable.ru.length !== 0) {
       ElMessage.error('Files have different length! It may cause an error!')
-      filesState.enFileRaw = []
-      filesState.ruFileRaw = []
+      enFileRaw.value = []
+      ruFileRaw.value = []
       store.commit('resetEn')
       store.commit('resetRu')
     } else {
@@ -127,14 +97,14 @@ const checkFilesAfterLoading = () => {
 const confirmLoading = () => {
   store.dispatch('setEn', enFile.value.raw)
   store.dispatch('setRu', ruFile.value?.raw)
-  store.dispatch('setPreset', filesState.preset)
+  store.dispatch('setPreset', preset.value)
   store.dispatch('setCurrentIndex', 0)
   checkFilesAfterLoading()
 }
 const resetState = () => {
-  filesState.enFileRaw = []
-  filesState.ruFileRaw = []
-  filesState.preset = 'none'
+  enFileRaw.value = []
+  ruFileRaw.value = []
+  preset.value = 'none'
   store.commit('resetEn')
   store.commit('resetRu')
   store.commit('resetPreset')

@@ -74,9 +74,6 @@ import presets from '@/data/presets'
 const dialog = ref(false)
 const resultedLine = ref('')
 
-const translatedData = ref([])
-const bufferTranslatedData = ref([])
-
 const store = useStore()
 
 const enFile = computed(() => store.state.translatable.en)
@@ -85,6 +82,14 @@ const preset = computed(() => store.state.translatable.preset)
 const currentIndex = computed({
   get: () => store.state.translatable.currentIndex,
   set: (value) => store.commit('setCurrentIndex', value)
+})
+const translatedData = computed({
+  get: () => store.state.translatable.translatedData,
+  set: (value) => store.commit('setTranslatedData', value)
+})
+const bufferTranslatedData = computed({
+  get: () => store.state.translatable.bufferTranslatedData,
+  set: (value) => store.commit('setBufferTranslatedData', value)
 })
 
 const currentEnLine = computed(() => enFile.value[currentIndex.value] ?? '')

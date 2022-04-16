@@ -3,7 +3,9 @@ export default {
     en: [],
     ru: [],
     preset: 'none',
-    currentIndex: 0
+    currentIndex: 0,
+    translatedData: [],
+    bufferTranslatedData: []
   },
   mutations: {
     setEn (state, value) {
@@ -18,6 +20,12 @@ export default {
     setCurrentIndex (state, value) {
       state.currentIndex = value
     },
+    setTranslatedData (state, value) {
+      state.translatedData = value
+    },
+    setBufferTranslatedData (state, value) {
+      state.bufferTranslatedData = value
+    },
     resetEn (state) {
       state.en = []
     },
@@ -29,6 +37,12 @@ export default {
     },
     resetCurrentIndex (state) {
       state.currentIndex = 0
+    },
+    resetTranslatedData (state) {
+      state.translatedData = []
+    },
+    resetBufferTranslatedData (state) {
+      state.bufferTranslatedData = []
     }
   },
   actions: {
@@ -57,12 +71,6 @@ export default {
       reader.onerror = function () {
         console.log(reader.error)
       }
-    },
-    setPreset ({ commit }, value) {
-      commit('setPreset', value)
-    },
-    setCurrentIndex ({ commit }, value) {
-      commit('setCurrentIndex', value)
     }
   }
 }

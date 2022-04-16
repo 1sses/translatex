@@ -97,8 +97,8 @@ const checkFilesAfterLoading = () => {
 const confirmLoading = () => {
   store.dispatch('setEn', enFile.value.raw)
   store.dispatch('setRu', ruFile.value?.raw)
-  store.dispatch('setPreset', preset.value)
-  store.dispatch('setCurrentIndex', 0)
+  store.commit('setPreset', preset.value)
+  store.commit('setCurrentIndex', 0)
   checkFilesAfterLoading()
 }
 const resetState = () => {

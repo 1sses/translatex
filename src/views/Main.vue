@@ -132,7 +132,31 @@ const confirmLine = () => {
 }
 
 const saveWork = (shouldSplitFiles, filename) => {
-  console.log('save work', shouldSplitFiles, filename)
+  const a = document.createElement('a')
+  a.download = filename
+  const file = new Blob(
+    [translatedData.value.map(line => line.text).join('\n').trim()],
+    { type: 'text/plain' }
+  )
+  a.href = URL.createObjectURL(file)
+  a.click()
+  if (shouldSplitFiles) {
+    const fileExt = '.' + filename.split('.').pop()
+    const enRestFile = new Blob(
+      [enFile.value.slice(currentIndex.value).join('\n').trim()],
+      { type: 'text/plain' }
+    )
+    a.download = filename.replace(fileExt, '_rest_en' + fileExt)
+    a.href = URL.createObjectURL(enRestFile)
+    a.click()
+    const ruRestFile = new Blob(
+      [ruFile.value.slice(currentIndex.value).join('\n').trim()],
+      { type: 'text/plain' }
+    )
+    a.download = filename.replace(fileExt, '_rest_ru' + fileExt)
+    a.href = URL.createObjectURL(ruRestFile)
+    a.click()
+  }
 }
 
 const jumpToLine = (line) => {

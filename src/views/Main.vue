@@ -70,6 +70,7 @@ import TranslatableFilesDialog from '@/components/TranslatableFilesDialog'
 import GlobalTranslateControls from '@/components/GlobalTranslateControls'
 import LastTranslatedTable from '@/components/LastTranslatedTable'
 import presets from '@/data/presets'
+import getLocalstorageSize from '@/utils/getLocalstorageSize'
 
 const dialog = ref(false)
 const resultedLine = ref('')
@@ -97,10 +98,18 @@ const currentRuLine = computed(() => ruFile.value[currentIndex.value] ?? '')
 const latestLines = computed(() => translatedData.value.slice(-10))
 
 watch(currentRuLine, () => {
-  // fix problems, cause lots of bugs!
-  if (bufferTranslatedData.value.length) return
-  // here is logic for translating
-  resultedLine.value = currentRuLine.value
+  if (bufferTranslatedData.value.length) {
+    resultedLine.value = bufferTranslatedData.value.at(-1).text
+  } else resultedLine.value = currentRuLine.value
+})
+
+watch(currentIndex, () => {
+  if (currentIndex.value % 10 === 0) {
+    localStorage.setItem('translated', JSON.stringify(translatedData.value.map(({ text }) => text)))
+    if (getLocalstorageSize() > 1e6) {
+      ElMessage.warning('The backup storage is full, save the work to avoid problems')
+    }
+  }
 })
 
 const setResult = (value) => {

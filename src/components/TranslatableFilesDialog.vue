@@ -21,11 +21,23 @@
     </el-radio-group>
     <template #footer>
       <el-row justify="space-between">
-        <el-popconfirm title="Are you sure to reset files and preset?" @confirm="resetState">
-          <template #reference>
-            <el-button circle type="warning"><el-icon><refresh/></el-icon></el-button>
-          </template>
-        </el-popconfirm>
+        <div>
+          <el-popconfirm title="Are you sure to reset files and preset?" @confirm="resetState">
+            <template #reference>
+              <el-button circle type="warning"><el-icon><refresh/></el-icon></el-button>
+            </template>
+          </el-popconfirm>
+          <el-popover
+            title="Restore"
+            :width="200"
+            trigger="hover"
+            content="Restore translated data from backup"
+          >
+            <template #reference>
+              <el-button circle type="success" @click="restoreBackup"><el-icon><refresh-left /></el-icon></el-button>
+            </template>
+          </el-popover>
+        </div>
         <div>
           <el-button type="danger" @click="dialog = false">Cancel</el-button>
           <el-button type="success" @click="confirmLoading" :disabled="!enFile">Confirm</el-button>
@@ -39,9 +51,9 @@
 import { computed, defineProps, defineEmits, ref } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
-import { Refresh } from '@element-plus/icons-vue'
-import presets from '@/data/presets'
+import { Refresh, RefreshLeft } from '@element-plus/icons-vue'
 import FileDragUploader from '@/components/FileDragUploader'
+import presets from '@/data/presets'
 
 const ext = ['txt', 'rpy']
 
@@ -99,6 +111,8 @@ const confirmLoading = () => {
   store.dispatch('setRu', ruFile.value?.raw)
   store.commit('setPreset', preset.value)
   store.commit('setCurrentIndex', 0)
+  store.commit('setTranslatedData', [])
+  store.commit('setBufferTranslatedData', [])
   checkFilesAfterLoading()
 }
 const resetState = () => {
@@ -109,6 +123,19 @@ const resetState = () => {
   store.commit('resetRu')
   store.commit('resetPreset')
   store.commit('resetCurrentIndex')
+  store.commit('resetTranslatedData')
+  store.commit('resetBufferTranslatedData')
+}
+const restoreBackup = () => {
+  const data = JSON.parse(localStorage.getItem('translated') ?? '[]')
+  const a = document.createElement('a')
+  a.download = 'restore.txt'
+  const file = new Blob(
+    [data.join('\n').trim()],
+    { type: 'text/plain' }
+  )
+  a.href = URL.createObjectURL(file)
+  a.click()
 }
 </script>
 

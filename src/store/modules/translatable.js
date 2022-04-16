@@ -1,17 +1,9 @@
 export default {
-  state () {
-    return {
-      en: [],
-      ru: [],
-      preset: 'none',
-      currentIndex: 0
-    }
-  },
-  getters: {
-    en: state => state.en,
-    ru: state => state.ru,
-    preset: state => state.preset,
-    currentIndex: state => state.currentIndex
+  state: {
+    en: [],
+    ru: [],
+    preset: 'none',
+    currentIndex: 0
   },
   mutations: {
     setEn (state, value) {

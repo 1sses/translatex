@@ -79,11 +79,11 @@ const bufferTranslatedData = ref([])
 
 const store = useStore()
 
-const enFile = computed(() => store.getters.en)
-const ruFile = computed(() => store.getters.ru)
-const preset = computed(() => store.getters.preset)
+const enFile = computed(() => store.state.translatable.en)
+const ruFile = computed(() => store.state.translatable.ru)
+const preset = computed(() => store.state.translatable.preset)
 const currentIndex = computed({
-  get: () => store.getters.currentIndex,
+  get: () => store.state.translatable.currentIndex,
   set: (value) => store.commit('setCurrentIndex', value)
 })
 
@@ -170,5 +170,6 @@ const jumpToLine = (line) => {
 .el-input.is-disabled .el-input__inner {
   background-color: white;
   color: #606266;
+  cursor: crosshair;
 }
 </style>

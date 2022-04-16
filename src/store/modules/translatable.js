@@ -1,3 +1,5 @@
+import convertFileToText from '@/utils/convertFileToText'
+
 export default {
   state: {
     en: [],
@@ -47,30 +49,18 @@ export default {
   },
   actions: {
     setEn ({ commit }, file) {
-      const reader = new FileReader()
-      reader.readAsText(file)
-
-      reader.onload = function () {
-        commit('setEn', reader.result.split('\n'))
-      }
-      reader.onerror = function () {
-        console.log(reader.error)
-      }
+      convertFileToText(file)
+        .then(value => commit('setEn', value.split('\n')))
+        .catch(err => console.log(err))
     },
     setRu ({ commit }, file) {
       if (!file) {
         commit('setRu', [])
         return
       }
-      const reader = new FileReader()
-      reader.readAsText(file)
-
-      reader.onload = function () {
-        commit('setRu', reader.result.split('\n'))
-      }
-      reader.onerror = function () {
-        console.log(reader.error)
-      }
+      convertFileToText(file)
+        .then(value => commit('setRu', value.split('\n')))
+        .catch(err => console.log(err))
     }
   }
 }

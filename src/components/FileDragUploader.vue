@@ -8,7 +8,7 @@
       :file-list="enFileRaw"
       :om-change="$emit('enFileChange')"
     >
-      <el-icon :size="40" :color="enFileLoaded ? '#67C23A' : ''">
+      <el-icon :size="40" :color="enFileLoaded ? '#67C23A' : 'dimgray'">
         <upload-filled/>
       </el-icon>
       <div class="el-upload__text">Drop file here or<br> <em>click to upload</em></div>
@@ -26,7 +26,7 @@
       :file-list="ruFileRaw"
       :on-change="$emit('ruFileChange')"
     >
-      <el-icon :size="40" :color="ruFileLoaded ? '#67C23A' : ''">
+      <el-icon :size="40" :color="ruFileLoaded ? '#67C23A' : 'dimgray'">
         <upload-filled/>
       </el-icon>
       <div class="el-upload__text"> Drop file here or<br> <em>click to upload</em></div>

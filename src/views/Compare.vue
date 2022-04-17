@@ -2,7 +2,7 @@
   <el-container>
     <el-col :span="8">
       <h2 class="mb-50">Load files to compare:</h2>
-      <FileDragUploader
+      <FilesDragUploader
         :en-file-raw="file1Raw"
         :ru-file-raw="file2Raw"
         :en-file-loaded="!!file1Raw[0]"
@@ -84,7 +84,7 @@ import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
-import FileDragUploader from '@/components/FilesDragUploader'
+import FilesDragUploader from '@/components/FilesDragUploader'
 import StatusMessages from '@/components/StatusMessages'
 import statuses from '@/data/statuses'
 import { comparableNames } from '@/store/modules/comparable'

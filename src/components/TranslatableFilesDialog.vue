@@ -7,7 +7,7 @@
       <h2 class="dialog-header">Load files</h2>
     </template>
     <h3>Translatable files:</h3>
-    <FileDragUploader
+    <FilesDragUploader
       :en-file-raw="enFileRaw"
       :ru-file-raw="ruFileRaw"
       :en-file-loaded="!!enFile"
@@ -52,7 +52,7 @@ import { computed, defineProps, defineEmits, ref } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Refresh, RefreshLeft } from '@element-plus/icons-vue'
-import FileDragUploader from '@/components/FilesDragUploader'
+import FilesDragUploader from '@/components/FilesDragUploader'
 import downloadTextFile from '@/utils/downloadTextFile'
 import presets from '@/data/presets'
 

@@ -1,8 +1,8 @@
 <template>
   <el-collapse>
     <el-collapse-item
-      v-for="(message, index) in messages"
-      :key="index"
+      v-for="message in messages"
+      :key="message.line"
     >
       <template #title>
         <h3>

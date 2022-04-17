@@ -7,8 +7,6 @@
         :ru-file-raw="file2Raw"
         :en-file-loaded="!!file1Raw[0]"
         :ru-file-loaded="!!file2Raw[0]"
-        @enFileChange="handleFile1Check"
-        @ruFileChange="handleFile2Check"
       />
       <el-row justify="center" class="mb-50" style="margin-top: 30px;">
         <el-button
@@ -91,8 +89,6 @@ import { comparableNames } from '@/store/modules/comparable'
 import compareLines from '@/algorithms/compare/compareLines'
 import getNextSuccessLine from '@/algorithms/compare/getNextSuccessLine'
 
-const ext = ['txt', 'rpy']
-
 const store = useStore()
 
 const file1Raw = ref([])
@@ -124,19 +120,6 @@ const messages = computed({
 })
 
 const currentStatusComputed = computed(() => statuses[currentStatus.value] ?? statuses.loading)
-
-const handleFile1Check = () => {
-  if (file1Raw.value[0] && !~ext.indexOf(file1Raw.value[0].name.split('.').pop())) {
-    ElMessage.warning('Not allowed file format')
-    file1Raw.value = []
-  }
-}
-const handleFile2Check = () => {
-  if (file2Raw.value[0] && !~ext.indexOf(file2Raw.value[0].name.split('.').pop())) {
-    ElMessage.warning('Not allowed file format')
-    file2Raw.value = []
-  }
-}
 
 const confirmLoading = () => {
   file1.value = file1Raw.value[0].raw

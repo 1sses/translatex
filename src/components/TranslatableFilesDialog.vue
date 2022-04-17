@@ -12,8 +12,6 @@
       :ru-file-raw="ruFileRaw"
       :en-file-loaded="!!enFile"
       :ru-file-loaded="!!ruFile"
-      @enFileChange="handleEnFileCheck"
-      @ruFileChange="handleRuFileCheck"
     />
     <h3>Translate preset: </h3>
     <el-radio-group v-model="preset">
@@ -57,8 +55,6 @@ import downloadTextFile from '@/utils/downloadTextFile'
 import presets from '@/data/presets'
 import { translatableNames } from '@/store/modules/translatable'
 
-const ext = ['txt', 'rpy']
-
 const store = useStore()
 
 const enFileRaw = ref([])
@@ -72,26 +68,10 @@ const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
 
 const dialog = computed({
-  get () {
-    return props.modelValue
-  },
-  set (value) {
-    emit('update:modelValue', value)
-  }
+  get: () => props.modelValue,
+  set: value => emit('update:modelValue', value)
 })
 
-const handleEnFileCheck = () => {
-  if (enFile.value && !~ext.indexOf(enFile.value.name.split('.').pop())) {
-    ElMessage.warning('Not allowed file format')
-    enFileRaw.value = []
-  }
-}
-const handleRuFileCheck = () => {
-  if (ruFile.value && !~ext.indexOf(ruFile.value.name.split('.').pop())) {
-    ElMessage.warning('Not allowed file format')
-    ruFileRaw.value = []
-  }
-}
 const checkFilesAfterLoading = () => {
   if (store.state.translatable.en.length === 0) {
     setTimeout(checkFilesAfterLoading, 100)
@@ -111,9 +91,7 @@ const confirmLoading = () => {
   store.dispatch(translatableNames.setEn, enFile.value.raw)
   store.dispatch(translatableNames.setRu, ruFile.value?.raw)
   store.commit(translatableNames.setPreset, preset.value)
-  store.commit(translatableNames.setCurrentIndex, 0)
-  store.commit(translatableNames.setTranslatedData, [])
-  store.commit(translatableNames.setBufferTranslatedData, [])
+  store.commit(translatableNames.resetSecondaryState)
   checkFilesAfterLoading()
 }
 const resetState = () => {

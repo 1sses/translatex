@@ -2,6 +2,7 @@
   <el-upload
     drag
     action="https://jsonplaceholder.typicode.com/posts/"
+    :accept="availableExt.join(',')"
     :limit="1"
     :auto-upload="false"
     :file-list="fileRaw"
@@ -20,10 +21,12 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, watch } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
+import availableExt from '@/data/availableExt'
+import { ElMessage } from 'element-plus'
 
-defineProps({
+const props = defineProps({
   fileRaw: {
     type: Array,
     required: true

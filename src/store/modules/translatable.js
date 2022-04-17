@@ -45,6 +45,11 @@ export default {
       state.ru = []
     },
     [translatableNames.resetSecondaryState] (state) {
+      state.currentIndex = 0
+      state.translatedData = []
+      state.bufferTranslatedData = []
+    },
+    [translatableNames.resetState] (state) {
       state.en = []
       state.ru = []
       state.preset = 'none'

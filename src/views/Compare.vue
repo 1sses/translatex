@@ -52,7 +52,8 @@
           occurred in line {{currentIndex + 1}}
         </h3>
         <h3 v-if="nextSuccessLine !== Infinity">
-          The next completely matching line's in <span style="color: #409eff">{{nextSuccessLine}}</span> lines
+          The next completely matching line's in
+          <span style="color: #409eff">{{nextSuccessLine}}</span> line{{nextSuccessLine > 1 ? 's' : ''}}
         </h3>
         <h3 v-else style="color: #F56C6C">
           There are no matching lines in the files left!<br>
@@ -160,23 +161,30 @@ const start = () => {
   }
   cycleCompare()
 }
-const cycleCompare = () => {
+const cycleCompare = async () => {
   for (let i = currentIndex.value; i < file1.value.length; i++) {
-    const { status, helper } = compareLines(file1.value[i], file2.value[i])
-    currentStatus.value = status
-    if (status !== 'success') {
-      nextSuccessLine.value = getNextSuccessLine(i, file1.value, file2.value)
-      messages.value.push({
-        type: statuses[status],
-        line: i + 1,
-        file1Line: file1.value[i],
-        file2Line: file2.value[i],
-        helper
-      })
-      return
-    }
-    currentIndex.value++
+    const status = await asyncCompareHandler(i)
+    if (!status) return
   }
+  ElMessage.success('Comparing finished!')
+}
+
+const asyncCompareHandler = async (i) => {
+  const { status, helper } = compareLines(file1.value[i], file2.value[i])
+  currentStatus.value = status
+  if (status !== 'success') {
+    nextSuccessLine.value = getNextSuccessLine(i, file1.value, file2.value)
+    messages.value.push({
+      type: statuses[status],
+      line: i + 1,
+      file1Line: file1.value[i],
+      file2Line: file2.value[i],
+      helper
+    })
+    return false
+  }
+  currentIndex.value++
+  return true
 }
 
 const skipAndContinue = () => {
@@ -185,7 +193,10 @@ const skipAndContinue = () => {
 }
 
 const stopComparing = () => {
-  console.log('stop comparing')
+  const messagesCopy = messages.value.slice()
+  resetState()
+  ElMessage.warning('Comparing stopped!')
+  messages.value = messagesCopy
 }
 
 watch(file2, () => {

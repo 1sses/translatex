@@ -5,18 +5,41 @@
       <FileDragUploader
         :en-file-raw="file1Raw"
         :ru-file-raw="file2Raw"
-        :en-file-loaded="!!file1"
-        :ru-file-loaded="!!file2"
+        :en-file-loaded="!!file1Raw[0]"
+        :ru-file-loaded="!!file2Raw[0]"
         @enFileChange="handleFile1Check"
         @ruFileChange="handleFile2Check"
       />
-      <el-row justify="center" style="margin-top: 30px;">
-        <el-button type="success" @click="confirmLoading" :disabled="!file1 || !file2">Confirm</el-button>
+      <el-row justify="center" class="mb-50" style="margin-top: 30px;">
+        <el-button
+          type="success"
+          @click="confirmLoading"
+          :disabled="!file1Raw[0] || !file2Raw[0]"
+        >
+          Confirm
+        </el-button>
         <el-popconfirm title="Are you sure to reset files?" @confirm="resetState">
           <template #reference>
             <el-button circle type="warning"><el-icon><refresh/></el-icon></el-button>
           </template>
         </el-popconfirm>
+      </el-row>
+      <el-row justify="space-evenly">
+        <div>
+          <h3>Current state:</h3>
+        </div>
+        <el-progress
+          :width="200"
+          type="dashboard"
+          :status="currentStatus"
+          :stroke-width="15"
+          :percentage="(currentIndex / file1.length) || 30"
+        >
+          <template #default="{ percentage }">
+            <span class="percentage-value">{{ percentage }}%</span>
+            <span class="percentage-label">Progress</span>
+          </template>
+        </el-progress>
       </el-row>
     </el-col>
     <el-col :span="16">
@@ -40,26 +63,30 @@ const file1Raw = ref([])
 const file2Raw = ref([])
 
 const file1 = computed({
-  get: () => file1Raw.value[0],
+  get: () => store.state.comparable.file2,
   set: (value) => store.dispatch('setFile1', value)
 })
 const file2 = computed({
-  get: () => file2Raw.value[0],
+  get: () => store.state.comparable.file2,
   set: (value) => store.dispatch('setFile2', value)
 })
 const currentIndex = computed({
-  get: () => store.state.currentIndex,
+  get: () => store.state.comparable.currentIndex,
   set: (value) => store.commit('setCurrentIndex', value)
+})
+const currentStatus = computed({
+  get: () => store.state.comparable.currentStatus,
+  set: (value) => store.commit('setCurrentStatus', value)
 })
 
 const handleFile1Check = () => {
-  if (file1.value && !~ext.indexOf(file1.value.name.split('.').pop())) {
+  if (file1Raw.value[0] && !~ext.indexOf(file1Raw.value[0].name.split('.').pop())) {
     ElMessage.warning('Not allowed file format')
     file1Raw.value = []
   }
 }
 const handleFile2Check = () => {
-  if (file2.value && !~ext.indexOf(file2.value.name.split('.').pop())) {
+  if (file2Raw.value[0] && !~ext.indexOf(file2Raw.value[0].name.split('.').pop())) {
     ElMessage.warning('Not allowed file format')
     file2Raw.value = []
   }
@@ -79,6 +106,17 @@ const resetState = () => {
 <style scoped>
 .mb-50 {
   margin-bottom: 50px;
+}
+
+.percentage-value {
+  display: block;
+  margin-top: -10px;
+  font-size: 50px;
+}
+.percentage-label {
+  display: block;
+  margin-top: 10px;
+  font-size: 16px;
 }
 </style>
 <style>

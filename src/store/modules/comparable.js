@@ -4,7 +4,8 @@ export default {
   state: {
     file1: [],
     file2: [],
-    currentIndex: 0
+    currentIndex: 0,
+    currentStatus: 'success'
   },
   mutations: {
     setFile1 (state, payload) {

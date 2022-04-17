@@ -12,6 +12,7 @@
       </template>
       <p>1 => {{message.file1Line}}</p>
       <p>2 => {{message.file2Line}}</p>
+      <h4>{{message.helper}}</h4>
     </el-collapse-item>
   </el-collapse>
 </template>

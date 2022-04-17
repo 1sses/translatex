@@ -51,9 +51,22 @@
           <span :style="{color: currentStatusComputed.color}">{{currentStatusComputed.text}}</span>
           occurred in line {{currentIndex + 1}}
         </h3>
-        <h3>The next completely matching line's in <span style="color: #409eff">5</span> lines</h3>
+        <h3 v-if="nextSuccessLine !== Infinity">
+          The next completely matching line's in <span style="color: #409eff">{{nextSuccessLine}}</span> lines
+        </h3>
+        <h3 v-else style="color: #F56C6C">
+          There are no matching lines in the files left!<br>
+          It's recommended to stop the comparison!
+        </h3>
         <el-row>
-          <el-button type="primary" size="large" @click="skipAndContinue">Skip and continue</el-button>
+          <el-button
+            type="primary"
+            size="large"
+            :disabled="currentIndex === file1.length"
+            @click="skipAndContinue"
+          >
+            Skip and continue
+          </el-button>
           <el-button type="danger" size="large" @click="stopComparing">Stop comparing</el-button>
         </el-row>
       </el-col>
@@ -75,6 +88,7 @@ import StatusMessages from '@/components/StatusMessages'
 import statuses from '@/data/statuses'
 import { comparableNames } from '@/store/modules/comparable'
 import compareLines from '@/algorithms/compare/compareLines'
+import getNextSuccessLine from '@/algorithms/compare/getNextSuccessLine'
 
 const ext = ['txt', 'rpy']
 
@@ -99,7 +113,7 @@ const currentStatus = computed({
   get: () => store.state.comparable.currentStatus,
   set: (value) => store.commit(comparableNames.setCurrentStatus, value)
 })
-const nextSuccessILine = computed({
+const nextSuccessLine = computed({
   get: () => store.state.comparable.nextSuccessLine,
   set: (value) => store.commit(comparableNames.setNextSuccessLine, value)
 })
@@ -148,14 +162,16 @@ const start = () => {
 }
 const cycleCompare = () => {
   for (let i = currentIndex.value; i < file1.value.length; i++) {
-    const { status } = compareLines(file1.value[i], file2.value[i])
+    const { status, helper } = compareLines(file1.value[i], file2.value[i])
     currentStatus.value = status
     if (status !== 'success') {
+      nextSuccessLine.value = getNextSuccessLine(i, file1.value, file2.value)
       messages.value.push({
         type: statuses[status],
         line: i + 1,
         file1Line: file1.value[i],
-        file2Line: file2.value[i]
+        file2Line: file2.value[i],
+        helper
       })
       return
     }

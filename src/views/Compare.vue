@@ -84,7 +84,7 @@ import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
-import FileDragUploader from '@/components/FileDragUploader'
+import FileDragUploader from '@/components/FilesDragUploader'
 import StatusMessages from '@/components/StatusMessages'
 import statuses from '@/data/statuses'
 import { comparableNames } from '@/store/modules/comparable'
@@ -217,16 +217,5 @@ watch(file2, () => {
   display: block;
   margin-top: 10px;
   font-size: 16px;
-}
-</style>
-<style>
-.uploader .el-upload-dragger {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  width: 200px;
-  height: 120px;
 }
 </style>

@@ -52,7 +52,7 @@ import { computed, defineProps, defineEmits, ref } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Refresh, RefreshLeft } from '@element-plus/icons-vue'
-import FileDragUploader from '@/components/FileDragUploader'
+import FileDragUploader from '@/components/FilesDragUploader'
 import downloadTextFile from '@/utils/downloadTextFile'
 import presets from '@/data/presets'
 

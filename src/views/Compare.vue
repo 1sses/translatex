@@ -24,7 +24,7 @@
           </template>
         </el-popconfirm>
       </el-row>
-      <el-row justify="space-evenly">
+      <el-row justify="space-evenly" class="mb-50">
         <div>
           <h3>Current state:</h3>
           <p>- Confirmed {{currentIndex}} / {{file1.length}} lines</p>
@@ -37,7 +37,7 @@
           type="dashboard"
           :status="currentStatus"
           :stroke-width="15"
-          :percentage="+((currentIndex / file1.length * 100) || 30).toFixed(0)"
+          :percentage="+((currentIndex / file1.length * 100) || 0).toFixed(0)"
         >
           <template #default="{ percentage }">
             <span class="percentage-value">{{ percentage }}%</span>
@@ -45,6 +45,18 @@
           </template>
         </el-progress>
       </el-row>
+      <el-col v-if="file2.length && currentStatus !== 'success'" style="margin-left: 50px">
+        <h2>Status:</h2>
+        <h3>
+          <span :style="{color: currentStatusComputed.color}">{{currentStatusComputed.text}}</span>
+          occurred in line {{currentIndex + 1}}
+        </h3>
+        <h3>The next completely matching line's in <span style="color: #409eff">5</span> lines</h3>
+        <el-row>
+          <el-button type="primary" size="large" @click="skipAndContinue">Skip and continue</el-button>
+          <el-button type="danger" size="large" @click="stopComparing">Stop comparing</el-button>
+        </el-row>
+      </el-col>
     </el-col>
     <el-col :span="16">
       <h2 class="mb-50">Status messages:</h2>
@@ -54,13 +66,15 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
 import FileDragUploader from '@/components/FileDragUploader'
 import StatusMessages from '@/components/StatusMessages'
 import statuses from '@/data/statuses'
+import { comparableNames } from '@/store/modules/comparable'
+import compareLines from '@/algorithms/compare/compareLines'
 
 const ext = ['txt', 'rpy']
 
@@ -68,42 +82,30 @@ const store = useStore()
 
 const file1Raw = ref([])
 const file2Raw = ref([])
-const messages = ref([
-  {
-    type: statuses.warning,
-    line: 5,
-    file1Line: 'We are the champions of the world and we will be the champions of the world',
-    file2Line: 'We are the champions of the world, so we will be the champions of the world'
-  },
-  {
-    type: statuses.exception,
-    line: 10,
-    file1Line: 'We are the champions of the world and we will be the champions of the world',
-    file2Line: 'Some people think that we are the champions of the world, but we are not'
-  },
-  {
-    type: statuses.exception,
-    line: 15,
-    file1Line: 'We are the champions of the world and we will be the champions of the world',
-    file2Line: 'He is the champion of the world, but he will be the champion of the country'
-  }
-])
 
 const file1 = computed({
-  get: () => store.state.comparable.file2,
-  set: (value) => store.dispatch('setFile1', value)
+  get: () => store.state.comparable.file1,
+  set: (value) => store.dispatch(comparableNames.setFile1, value)
 })
 const file2 = computed({
   get: () => store.state.comparable.file2,
-  set: (value) => store.dispatch('setFile2', value)
+  set: (value) => store.dispatch(comparableNames.setFile2, value)
 })
 const currentIndex = computed({
   get: () => store.state.comparable.currentIndex,
-  set: (value) => store.commit('setCurrentIndex', value)
+  set: (value) => store.commit(comparableNames.setCurrentIndex, value)
 })
 const currentStatus = computed({
   get: () => store.state.comparable.currentStatus,
-  set: (value) => store.commit('setCurrentStatus', value)
+  set: (value) => store.commit(comparableNames.setCurrentStatus, value)
+})
+const nextSuccessILine = computed({
+  get: () => store.state.comparable.nextSuccessLine,
+  set: (value) => store.commit(comparableNames.setNextSuccessLine, value)
+})
+const messages = computed({
+  get: () => store.state.comparable.messages,
+  set: (value) => store.commit(comparableNames.setMessages, value)
 })
 
 const currentStatusComputed = computed(() => statuses[currentStatus.value] ?? statuses.loading)
@@ -127,14 +129,52 @@ const confirmLoading = () => {
 
   file1Raw.value = []
   file2Raw.value = []
-  currentIndex.value = 0
+  store.commit(comparableNames.resetSecondaryState)
 }
 
 const resetState = () => {
   file1Raw.value = []
   file2Raw.value = []
-  store.commit('resetState')
+  store.commit(comparableNames.resetState)
 }
+
+const start = () => {
+  if (file1.value.length !== file2.value.length) {
+    ElMessage.error('Files must have the same length')
+    store.commit(comparableNames.resetState)
+    return
+  }
+  cycleCompare()
+}
+const cycleCompare = () => {
+  for (let i = currentIndex.value; i < file1.value.length; i++) {
+    const { status } = compareLines(file1.value[i], file2.value[i])
+    currentStatus.value = status
+    if (status !== 'success') {
+      messages.value.push({
+        type: statuses[status],
+        line: i + 1,
+        file1Line: file1.value[i],
+        file2Line: file2.value[i]
+      })
+      return
+    }
+    currentIndex.value++
+  }
+}
+
+const skipAndContinue = () => {
+  currentIndex.value++
+  cycleCompare()
+}
+
+const stopComparing = () => {
+  console.log('stop comparing')
+}
+
+watch(file2, () => {
+  if (file2.value.length) start()
+})
 </script>
 <style scoped>
 .mb-50 {

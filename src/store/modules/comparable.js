@@ -1,37 +1,68 @@
 import convertFileToText from '@/utils/convertFileToText'
 
+export const comparableNames = {
+  setFile1: 'comparable/setFile1',
+  setFile2: 'comparable/setFile2',
+  setCurrentIndex: 'comparable/setCurrentIndex',
+  setCurrentStatus: 'comparable/setCurrentStatus',
+  setNextSuccessLine: 'comparable/setNextSuccessLine',
+  setMessages: 'comparable/setMessages',
+  resetState: 'comparable/resetState',
+  resetSecondaryState: 'comparable/resetSecondaryState'
+}
+
 export default {
   state: {
     file1: [],
     file2: [],
     currentIndex: 0,
-    currentStatus: ''
+    currentStatus: '',
+    nextSuccessLine: 0,
+    messages: []
   },
   mutations: {
-    setFile1 (state, payload) {
+    [comparableNames.setFile1] (state, payload) {
       state.file1 = payload
     },
-    setFile2 (state, payload) {
+    [comparableNames.setFile2] (state, payload) {
       state.file2 = payload
     },
-    setCurrentIndex (state, payload) {
+    [comparableNames.setCurrentIndex] (state, payload) {
       state.currentIndex = payload
     },
-    resetState (state) {
+    [comparableNames.setCurrentStatus] (state, payload) {
+      state.currentStatus = payload
+    },
+    [comparableNames.setNextSuccessLine] (state, payload) {
+      state.nextSuccessLine = payload
+    },
+    [comparableNames.setMessages] (state, payload) {
+      state.messages = payload
+    },
+    [comparableNames.resetState] (state) {
       state.file1 = []
       state.file2 = []
       state.currentIndex = 0
+      state.currentStatus = ''
+      state.nextSuccessLine = 0
+      state.messages = []
+    },
+    [comparableNames.resetSecondaryState] (state) {
+      state.currentIndex = 0
+      state.currentStatus = ''
+      state.nextSuccessLine = 0
+      state.messages = []
     }
   },
   actions: {
-    setFile1 ({ commit }, payload) {
+    [comparableNames.setFile1] ({ commit }, payload) {
       convertFileToText(payload)
-        .then(value => commit('setFile1', value.split('\n')))
+        .then(value => commit(comparableNames.setFile1, value.split('\n')))
         .catch(err => console.log(err))
     },
-    setFile2 ({ commit }, payload) {
+    [comparableNames.setFile2] ({ commit }, payload) {
       convertFileToText(payload)
-        .then(value => commit('setFile2', value.split('\n')))
+        .then(value => commit(comparableNames.setFile2, value.split('\n')))
         .catch(err => console.log(err))
     }
   }

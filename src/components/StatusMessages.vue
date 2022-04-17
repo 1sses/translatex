@@ -10,6 +10,8 @@
           in line <span style="font-size: 20px">{{message.line}}</span>
         </h3>
       </template>
+      <p>1 => {{message.file1Line}}</p>
+      <p>2 => {{message.file2Line}}</p>
     </el-collapse-item>
   </el-collapse>
 </template>

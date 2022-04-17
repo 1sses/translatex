@@ -55,6 +55,7 @@ import { Refresh, RefreshLeft } from '@element-plus/icons-vue'
 import FilesDragUploader from '@/components/FilesDragUploader'
 import downloadTextFile from '@/utils/downloadTextFile'
 import presets from '@/data/presets'
+import { translatableNames } from '@/store/modules/translatable'
 
 const ext = ['txt', 'rpy']
 
@@ -100,27 +101,26 @@ const checkFilesAfterLoading = () => {
       ElMessage.error('Files have different length! It may cause an error!')
       enFileRaw.value = []
       ruFileRaw.value = []
-      store.commit('resetEn')
-      store.commit('resetRu')
+      store.commit(translatableNames.resetPrimaryState)
     } else {
       dialog.value = false
     }
   }
 }
 const confirmLoading = () => {
-  store.dispatch('setEn', enFile.value.raw)
-  store.dispatch('setRu', ruFile.value?.raw)
-  store.commit('setPreset', preset.value)
-  store.commit('setCurrentIndex', 0)
-  store.commit('setTranslatedData', [])
-  store.commit('setBufferTranslatedData', [])
+  store.dispatch(translatableNames.setEn, enFile.value.raw)
+  store.dispatch(translatableNames.setRu, ruFile.value?.raw)
+  store.commit(translatableNames.setPreset, preset.value)
+  store.commit(translatableNames.setCurrentIndex, 0)
+  store.commit(translatableNames.setTranslatedData, [])
+  store.commit(translatableNames.setBufferTranslatedData, [])
   checkFilesAfterLoading()
 }
 const resetState = () => {
   enFileRaw.value = []
   ruFileRaw.value = []
   preset.value = 'none'
-  store.commit('resetState')
+  store.commit(translatableNames.resetState)
 }
 const restoreBackup = () => {
   const data = JSON.parse(localStorage.getItem('translated') ?? '[]')
@@ -134,16 +134,6 @@ const restoreBackup = () => {
 }
 </style>
 <style>
-.uploader .el-upload-dragger {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  width: 200px;
-  height: 120px;
-}
-
 .el-dialog__body {
   padding-top: 0
 }

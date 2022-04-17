@@ -1,5 +1,17 @@
 import convertFileToText from '@/utils/convertFileToText'
 
+export const translatableNames = {
+  setEn: 'translatable/setEn',
+  setRu: 'translatable/setRu',
+  setPreset: 'translatable/setPreset',
+  setCurrentIndex: 'translatable/setCurrentIndex',
+  setTranslatedData: 'translatable/setTranslatedData',
+  setBufferTranslatedData: 'translatable/setBufferTranslatedData',
+  resetPrimaryState: 'translatable/resetPrimaryState',
+  resetSecondaryState: 'translatable/resetSecondaryState',
+  resetState: 'translatable/resetState'
+}
+
 export default {
   state: {
     en: [],
@@ -10,31 +22,29 @@ export default {
     bufferTranslatedData: []
   },
   mutations: {
-    setEn (state, value) {
+    [translatableNames.setEn] (state, value) {
       state.en = value
     },
-    setRu (state, value) {
+    [translatableNames.setRu] (state, value) {
       state.ru = value
     },
-    setPreset (state, value) {
+    [translatableNames.setPreset] (state, value) {
       state.preset = value
     },
-    setCurrentIndex (state, value) {
+    [translatableNames.setCurrentIndex] (state, value) {
       state.currentIndex = value
     },
-    setTranslatedData (state, value) {
+    [translatableNames.setTranslatedData] (state, value) {
       state.translatedData = value
     },
-    setBufferTranslatedData (state, value) {
+    [translatableNames.setBufferTranslatedData] (state, value) {
       state.bufferTranslatedData = value
     },
-    resetEn (state) {
+    [translatableNames.resetPrimaryState] (state) {
       state.en = []
-    },
-    resetRu (state) {
       state.ru = []
     },
-    resetState (state) {
+    [translatableNames.resetSecondaryState] (state) {
       state.en = []
       state.ru = []
       state.preset = 'none'
@@ -44,18 +54,18 @@ export default {
     }
   },
   actions: {
-    setEn ({ commit }, file) {
+    [translatableNames.setEn] ({ commit }, file) {
       convertFileToText(file)
-        .then(value => commit('setEn', value.split('\n')))
+        .then(value => commit(translatableNames.setEn, value.split('\n')))
         .catch(err => console.log(err))
     },
-    setRu ({ commit }, file) {
+    [translatableNames.setRu] ({ commit }, file) {
       if (!file) {
-        commit('setRu', [])
+        commit(translatableNames.setRu, [])
         return
       }
       convertFileToText(file)
-        .then(value => commit('setRu', value.split('\n')))
+        .then(value => commit(translatableNames.setRu, value.split('\n')))
         .catch(err => console.log(err))
     }
   }

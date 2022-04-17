@@ -53,6 +53,7 @@ import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Refresh, RefreshLeft } from '@element-plus/icons-vue'
 import FileDragUploader from '@/components/FileDragUploader'
+import downloadTextFile from '@/utils/downloadTextFile'
 import presets from '@/data/presets'
 
 const ext = ['txt', 'rpy']
@@ -119,23 +120,11 @@ const resetState = () => {
   enFileRaw.value = []
   ruFileRaw.value = []
   preset.value = 'none'
-  store.commit('resetEn')
-  store.commit('resetRu')
-  store.commit('resetPreset')
-  store.commit('resetCurrentIndex')
-  store.commit('resetTranslatedData')
-  store.commit('resetBufferTranslatedData')
+  store.commit('resetState')
 }
 const restoreBackup = () => {
   const data = JSON.parse(localStorage.getItem('translated') ?? '[]')
-  const a = document.createElement('a')
-  a.download = 'restore.txt'
-  const file = new Blob(
-    [data.join('\n').trim()],
-    { type: 'text/plain' }
-  )
-  a.href = URL.createObjectURL(file)
-  a.click()
+  downloadTextFile('restore.txt', data.join('\n').trim())
 }
 </script>
 

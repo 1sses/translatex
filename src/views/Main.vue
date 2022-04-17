@@ -69,8 +69,9 @@ import { Files, ArrowLeft, ArrowRight, Aim } from '@element-plus/icons-vue'
 import TranslatableFilesDialog from '@/components/TranslatableFilesDialog'
 import GlobalTranslateControls from '@/components/GlobalTranslateControls'
 import LastTranslatedTable from '@/components/LastTranslatedTable'
-import presets from '@/data/presets'
 import getLocalstorageSize from '@/utils/getLocalstorageSize'
+import downloadTextFile from '@/utils/downloadTextFile'
+import presets from '@/data/presets'
 
 const dialog = ref(false)
 const resultedLine = ref('')
@@ -141,30 +142,20 @@ const confirmLine = () => {
 }
 
 const saveWork = (shouldSplitFiles, filename) => {
-  const a = document.createElement('a')
-  a.download = filename
-  const file = new Blob(
-    [translatedData.value.map(line => line.text).join('\n').trim()],
-    { type: 'text/plain' }
+  downloadTextFile(
+    filename,
+    translatedData.value.map(({ text }) => text).join('\n').trim()
   )
-  a.href = URL.createObjectURL(file)
-  a.click()
   if (shouldSplitFiles) {
-    const fileExt = '.' + filename.split('.').pop()
-    const enRestFile = new Blob(
-      [enFile.value.slice(currentIndex.value).join('\n').trim()],
-      { type: 'text/plain' }
+    const fileExt = `.${filename.split('.').pop()}`
+    downloadTextFile(
+      filename.replace(fileExt, '_rest_en' + fileExt),
+      enFile.value.slice(currentIndex.value).join('\n').trim()
     )
-    a.download = filename.replace(fileExt, '_rest_en' + fileExt)
-    a.href = URL.createObjectURL(enRestFile)
-    a.click()
-    const ruRestFile = new Blob(
-      [ruFile.value.slice(currentIndex.value).join('\n').trim()],
-      { type: 'text/plain' }
+    downloadTextFile(
+      filename.replace(fileExt, '_rest_ru' + fileExt),
+      ruFile.value.slice(currentIndex.value).join('\n').trim()
     )
-    a.download = filename.replace(fileExt, '_rest_ru' + fileExt)
-    a.href = URL.createObjectURL(ruRestFile)
-    a.click()
   }
 }
 

@@ -34,16 +34,12 @@ export default {
     resetRu (state) {
       state.ru = []
     },
-    resetPreset (state) {
+    resetState (state) {
+      state.en = []
+      state.ru = []
       state.preset = 'none'
-    },
-    resetCurrentIndex (state) {
       state.currentIndex = 0
-    },
-    resetTranslatedData (state) {
       state.translatedData = []
-    },
-    resetBufferTranslatedData (state) {
       state.bufferTranslatedData = []
     }
   },

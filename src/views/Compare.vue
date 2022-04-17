@@ -27,13 +27,17 @@
       <el-row justify="space-evenly">
         <div>
           <h3>Current state:</h3>
+          <p>- Confirmed {{currentIndex}} / {{file1.length}} lines</p>
+          <p>- Current line status:
+            <span :style="{color: currentStatusComputed.color}">{{currentStatusComputed.text}}</span>
+          </p>
         </div>
         <el-progress
           :width="200"
           type="dashboard"
           :status="currentStatus"
           :stroke-width="15"
-          :percentage="(currentIndex / file1.length) || 30"
+          :percentage="+((currentIndex / file1.length * 100) || 30).toFixed(0)"
         >
           <template #default="{ percentage }">
             <span class="percentage-value">{{ percentage }}%</span>
@@ -79,6 +83,31 @@ const currentStatus = computed({
   set: (value) => store.commit('setCurrentStatus', value)
 })
 
+const currentStatusComputed = computed(() => {
+  switch (currentStatus.value) {
+    case 'success':
+      return {
+        text: 'Success',
+        color: '#67C23A'
+      }
+    case 'exception':
+      return {
+        text: 'Error',
+        color: '#F56C6C'
+      }
+    case 'warning':
+      return {
+        text: 'Warning',
+        color: '#E6A23C'
+      }
+    default:
+      return {
+        text: 'Loading',
+        color: '#409EFF'
+      }
+  }
+})
+
 const handleFile1Check = () => {
   if (file1Raw.value[0] && !~ext.indexOf(file1Raw.value[0].name.split('.').pop())) {
     ElMessage.warning('Not allowed file format')
@@ -93,8 +122,12 @@ const handleFile2Check = () => {
 }
 
 const confirmLoading = () => {
-  file1.value = file1.value.raw
-  file2.value = file2.value.raw
+  file1.value = file1Raw.value[0].raw
+  file2.value = file2Raw.value[0].raw
+
+  file1Raw.value = []
+  file2Raw.value = []
+  currentIndex.value = 0
 }
 
 const resetState = () => {

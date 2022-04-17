@@ -48,6 +48,7 @@
     </el-col>
     <el-col :span="16">
       <h2 class="mb-50">Status messages:</h2>
+      <StatusMessages :messages="messages" />
     </el-col>
   </el-container>
 </template>
@@ -58,6 +59,8 @@ import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
 import FileDragUploader from '@/components/FileDragUploader'
+import StatusMessages from '@/components/StatusMessages'
+import statuses from '@/data/statuses'
 
 const ext = ['txt', 'rpy']
 
@@ -65,6 +68,26 @@ const store = useStore()
 
 const file1Raw = ref([])
 const file2Raw = ref([])
+const messages = ref([
+  {
+    type: statuses.warning,
+    line: 5,
+    file1Line: 'We are the champions of the world and we will be the champions of the world',
+    file2Line: 'We are the champions of the world, so we will be the champions of the world'
+  },
+  {
+    type: statuses.exception,
+    line: 10,
+    file1Line: 'We are the champions of the world and we will be the champions of the world',
+    file2Line: 'Some people think that we are the champions of the world, but we are not'
+  },
+  {
+    type: statuses.exception,
+    line: 15,
+    file1Line: 'We are the champions of the world and we will be the champions of the world',
+    file2Line: 'He is the champion of the world, but he will be the champion of the country'
+  }
+])
 
 const file1 = computed({
   get: () => store.state.comparable.file2,
@@ -83,30 +106,7 @@ const currentStatus = computed({
   set: (value) => store.commit('setCurrentStatus', value)
 })
 
-const currentStatusComputed = computed(() => {
-  switch (currentStatus.value) {
-    case 'success':
-      return {
-        text: 'Success',
-        color: '#67C23A'
-      }
-    case 'exception':
-      return {
-        text: 'Error',
-        color: '#F56C6C'
-      }
-    case 'warning':
-      return {
-        text: 'Warning',
-        color: '#E6A23C'
-      }
-    default:
-      return {
-        text: 'Loading',
-        color: '#409EFF'
-      }
-  }
-})
+const currentStatusComputed = computed(() => statuses[currentStatus.value] ?? statuses.loading)
 
 const handleFile1Check = () => {
   if (file1Raw.value[0] && !~ext.indexOf(file1Raw.value[0].name.split('.').pop())) {

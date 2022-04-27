@@ -1,6 +1,7 @@
 <template>
   <el-upload
     drag
+    class="uploader"
     action="https://jsonplaceholder.typicode.com/posts/"
     :accept="availableExt.join(',')"
     :limit="1"

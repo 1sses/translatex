@@ -12,7 +12,7 @@ export default {
   state: {
     file: [],
     name: '',
-    type: 'unknown'
+    type: ''
   },
   mutations: {
     [analyzedNames.setFile] (state, file) {
@@ -26,12 +26,12 @@ export default {
     },
     [analyzedNames.resetSecondaryState] (state) {
       state.name = ''
-      state.type = 'unknown'
+      state.type = ''
     },
     [analyzedNames.resetState] (state) {
       state.file = []
       state.name = ''
-      state.type = 'unknown'
+      state.type = ''
     }
   },
   actions: {

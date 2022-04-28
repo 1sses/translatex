@@ -1,10 +1,12 @@
 <template>
   <el-row>
-    <el-col :span="8">
+    <el-col :span="5">
       <h2 class="mb-50">Load file to analyze:</h2>
       <el-row>
-        <el-col :push="8">
-          <DragDropUploader :file-raw="fileRaw" :file-loaded="!!fileRaw[0]" tip-text="Select file to analyze" />
+        <el-col :push="5">
+          <div style="width: min-content;">
+            <DragDropUploader :file-raw="fileRaw" :file-loaded="!!fileRaw[0]" tip-text="Select file to analyze" />
+          </div>
           <el-row class="mb-50" style="margin-top: 30px;">
             <el-button
               type="success"
@@ -31,7 +33,36 @@
           <h3>Enter-less length: <span class="highlighted">{{enterlessFile.length}}</span></h3>
           <h3>Comment-less length: <span class="highlighted">{{commentlessFile.length}}</span></h3>
           <h3>Intended preset: <span class="highlighted">{{presets[type] ?? 'Unknown'}}</span></h3>
+          <h3>System lines: {{systemLinesCount}}</h3>
+          <el-divider />
+          <h3>Check syntax as:</h3>
+          <el-radio-group v-model="type">
+            <el-radio-button
+            v-for="(name, key) in presets"
+            :key="key"
+            :label="key === 'none' ? '' : key"
+            >
+              {{name}}
+            </el-radio-button>
+          </el-radio-group>
         </el-col>
+      </el-row>
+    </el-col>
+    <el-col :span="18" :push="1">
+      <h2>Computed file:</h2>
+      <el-table class="mb-50" :data="displayedFile" :max-height="500" :row-class-name="tableRowTypeGetter">
+        <el-table-column prop="line" label="№" width="70" />
+        <el-table-column prop="text" label="Text" />
+      </el-table>
+      <el-row style="column-gap: 20px">
+        <el-row align="middle">
+          <div class="square" style="background: var(--el-color-info-light-9)" />
+          <p>&nbsp; - system line</p>
+        </el-row>
+        <el-row align="middle">
+          <div class="square" style="background: var(--el-color-primary-light-9)" />
+          <p>&nbsp; - comment</p>
+        </el-row>
       </el-row>
     </el-col>
   </el-row>
@@ -45,11 +76,13 @@ import DragDropUploader from '@/components/DragDropUploader'
 import { analyzedNames } from '@/store/modules/analyzed'
 import removeComments from '@/algorithms/analyse/removeComments'
 import getAssumedFileType from '@/algorithms/analyse/getAssumedFileType'
+import getRowType from '@/algorithms/analyse/getRowType'
 import presets from '@/data/presets'
 
 const store = useStore()
 
 const fileRaw = ref([])
+const systemLinesCount = ref(0)
 
 const file = computed({
   get: () => store.state.analyzed.file,
@@ -66,6 +99,15 @@ const type = computed({
 const extension = computed(() => name.value.split('.').pop())
 const enterlessFile = computed(() => file.value.filter((line) => line.trim()))
 const commentlessFile = computed(() => removeComments(enterlessFile.value, type.value))
+const displayedFile = computed(() => file.value.map((line, index) => ({
+  line: index + 1,
+  text: line
+})))
+
+const tableRowTypeGetter = ({ row }) => {
+  const rowType = getRowType(row.text, type.value)
+  return `${rowType}-row`
+}
 
 const start = () => {
   type.value = getAssumedFileType(file.value)
@@ -93,5 +135,18 @@ watch(file, () => {
 .highlighted {
   font-size: 24px;
   color: #409EFF;
+}
+.square {
+  width: 30px;
+  height: 30px;
+}
+</style>
+<style>
+.el-table .comment-row {
+  --el-table-tr-bg-color: var(--el-color-primary-light-9);
+}
+
+.el-table .keyword-row {
+  --el-table-tr-bg-color: var(--el-color-info-light-9);
 }
 </style>

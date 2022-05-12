@@ -89,7 +89,7 @@ const commentlessFile = computed(() => removeComments(enterlessFile.value, type.
 const systemLinesCount = computed(() => {
   let count = 0
   for (const line of commentlessFile.value) {
-    if (getRowType(line, type.value) === 'keyword') {
+    if (getRowType(line, type.value) === 'system') {
       count++
     }
   }

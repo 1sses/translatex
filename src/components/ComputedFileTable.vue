@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table class="mb-50" :data="displayedFile" :max-height="500" :row-class-name="tableRowTypeGetter">
+    <el-table class="mb-50" :data="displayedFile" :max-height="800" :row-class-name="tableRowTypeGetter">
       <el-table-column prop="line" label="№" width="70" />
       <el-table-column prop="text" label="Text" />
     </el-table>
@@ -54,7 +54,7 @@ const tableRowTypeGetter = ({ row }) => {
   --el-table-tr-bg-color: var(--el-color-primary-light-9);
 }
 
-.el-table .keyword-row {
+.el-table .system-row {
   --el-table-tr-bg-color: var(--el-color-info-light-9);
 }
 

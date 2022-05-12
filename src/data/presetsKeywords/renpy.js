@@ -1,7 +1,7 @@
 export default [
-  'label', 'jump',
-  'scene', 'image', 'show', 'hide', 'with',
-  'menu', 'if', 'elif', 'else', 'return',
-  'play', 'stop',
-  'centered'
+  'label', 'jump', 'call',
+  'scene', 'image', 'show', 'hide', 'with', 'window',
+  'menu', 'if', 'elif', 'else', 'return', 'define', 'init',
+  'play', 'stop', 'pause', 'queue', 'voice',
+  'centered', 'extend', 'set'
 ]

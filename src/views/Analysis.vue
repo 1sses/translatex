@@ -32,8 +32,9 @@
           <el-divider />
           <h3>Enter-less length: <span class="highlighted">{{enterlessFile.length}}</span></h3>
           <h3>Comment-less length: <span class="highlighted">{{commentlessFile.length}}</span></h3>
-          <h3>Intended preset: <span class="highlighted">{{presets[type] ?? 'Unknown'}}</span></h3>
           <h3>System lines:  <span class="highlighted">{{systemLinesCount}}</span></h3>
+          <h3>Max line length: <span class="highlighted">{{maxLineLength}}</span></h3>
+          <h3>Intended preset: <span class="highlighted">{{presets[type] ?? 'Unknown'}}</span></h3>
           <el-divider />
           <h3>Check syntax as:</h3>
           <el-radio-group v-model="type">
@@ -99,6 +100,7 @@ const displayedFile = computed(() => file.value.map((line, index) => ({
   line: index + 1,
   text: line
 })))
+const maxLineLength = computed(() => Math.max(...commentlessFile.value.map((line) => line.length)))
 
 const start = () => {
   type.value = getAssumedFileType(file.value)

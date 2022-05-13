@@ -72,6 +72,7 @@ import LastTranslatedTable from '@/components/LastTranslatedTable'
 import getLocalstorageSize from '@/utils/getLocalstorageSize'
 import downloadTextFile from '@/utils/downloadTextFile'
 import presets from '@/data/presets'
+import { translatableNames } from '@/store/modules/translatable'
 
 const dialog = ref(false)
 const resultedLine = ref('')
@@ -83,15 +84,15 @@ const ruFile = computed(() => store.state.translatable.ru)
 const preset = computed(() => store.state.translatable.preset)
 const currentIndex = computed({
   get: () => store.state.translatable.currentIndex,
-  set: (value) => store.commit('setCurrentIndex', value)
+  set: (value) => store.commit(translatableNames.setCurrentIndex, value)
 })
 const translatedData = computed({
   get: () => store.state.translatable.translatedData,
-  set: (value) => store.commit('setTranslatedData', value)
+  set: (value) => store.commit(translatableNames.setTranslatedData, value)
 })
 const bufferTranslatedData = computed({
   get: () => store.state.translatable.bufferTranslatedData,
-  set: (value) => store.commit('setBufferTranslatedData', value)
+  set: (value) => store.commit(translatableNames.setBufferTranslatedData, value)
 })
 
 const currentEnLine = computed(() => enFile.value[currentIndex.value] ?? '')

@@ -4,6 +4,7 @@ export const analyzedNames = {
   setFile: 'analyzed/setFile',
   setName: 'analyzed/setName',
   setType: 'analyzed/setType',
+  setDuplicatedParts: 'analyzed/setDuplicatedParts',
   resetSecondaryState: 'analyzed/resetSecondaryState',
   resetState: 'analyzed/resetState'
 }
@@ -12,7 +13,8 @@ export default {
   state: {
     file: [],
     name: '',
-    type: ''
+    type: '',
+    duplicatedParts: []
   },
   mutations: {
     [analyzedNames.setFile] (state, file) {
@@ -24,6 +26,9 @@ export default {
     [analyzedNames.setType] (state, type) {
       state.type = type
     },
+    [analyzedNames.setDuplicatedParts] (state, duplicatedParts) {
+      state.duplicatedParts = duplicatedParts
+    },
     [analyzedNames.resetSecondaryState] (state) {
       state.name = ''
       state.type = ''
@@ -32,6 +37,7 @@ export default {
       state.file = []
       state.name = ''
       state.type = ''
+      state.duplicatedParts = []
     }
   },
   actions: {

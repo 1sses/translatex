@@ -67,6 +67,7 @@ import getAssumedFileType from '@/algorithms/analyse/getAssumedFileType'
 import getRowType from '@/algorithms/analyse/getRowType'
 import presets from '@/data/presets'
 import ComputedFileTable from '@/components/ComputedFileTable'
+import getDuplicatedParts from '@/algorithms/analyse/getDuplicatedParts'
 
 const store = useStore()
 
@@ -83,6 +84,10 @@ const name = computed({
 const type = computed({
   get: () => store.state.analyzed.type,
   set: (value) => store.commit(analyzedNames.setType, value)
+})
+const duplicatedParts = computed({
+  get: () => store.state.analyzed.duplicatedParts,
+  set: (value) => store.commit(analyzedNames.setDuplicatedParts, value)
 })
 const extension = computed(() => name.value.split('.').pop())
 const enterlessFile = computed(() => file.value.filter((line) => line.trim()))
@@ -104,6 +109,7 @@ const maxLineLength = computed(() => Math.max(...commentlessFile.value.map((line
 
 const start = () => {
   type.value = getAssumedFileType(file.value)
+  duplicatedParts.value = getDuplicatedParts(file.value)
 }
 
 const confirmLoading = () => {

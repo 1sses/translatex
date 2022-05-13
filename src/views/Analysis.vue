@@ -109,7 +109,7 @@ const maxLineLength = computed(() => Math.max(...commentlessFile.value.map((line
 
 const start = () => {
   type.value = getAssumedFileType(file.value)
-  duplicatedParts.value = getDuplicatedParts(file.value)
+  duplicatedParts.value = getDuplicatedParts(enterlessFile.value)
 }
 
 const confirmLoading = () => {

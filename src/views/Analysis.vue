@@ -89,23 +89,23 @@ const duplicatedParts = computed({
   get: () => store.state.analyzed.duplicatedParts,
   set: (value) => store.commit(analyzedNames.setDuplicatedParts, value)
 })
+const displayedFile = computed(() => file.value.map((line, index) => ({
+  line: index + 1,
+  text: line
+})))
 const extension = computed(() => name.value.split('.').pop())
-const enterlessFile = computed(() => file.value.filter((line) => line.trim()))
+const enterlessFile = computed(() => displayedFile.value.filter(line => line.text.trim()))
 const commentlessFile = computed(() => removeComments(enterlessFile.value, type.value))
 const systemLinesCount = computed(() => {
   let count = 0
   for (const line of commentlessFile.value) {
-    if (getRowType(line, type.value) === 'system') {
+    if (getRowType(line.text, type.value) === 'system') {
       count++
     }
   }
   return count
 })
-const displayedFile = computed(() => file.value.map((line, index) => ({
-  line: index + 1,
-  text: line
-})))
-const maxLineLength = computed(() => Math.max(...commentlessFile.value.map((line) => line.length)))
+const maxLineLength = computed(() => Math.max(...commentlessFile.value.map(line => line.text.length)))
 
 const start = () => {
   type.value = getAssumedFileType(file.value)

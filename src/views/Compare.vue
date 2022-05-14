@@ -154,7 +154,7 @@ const cycleCompare = () => {
       const status = await asyncCompareHandler(i)
       if (!status) return
       i++
-    } while (i % 666 !== 0 && i < file1.value.length)
+    } while (i % 166 !== 0 && i < file1.value.length)
     if (i < file1.value.length) {
       setTimeout(count)
     } else ElMessage.success('Comparing finished!')

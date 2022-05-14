@@ -2,6 +2,7 @@ import convertFileToText from '@/utils/convertFileToText'
 
 export const analyzedNames = {
   setFile: 'analyzed/setFile',
+  setDisplayedFile: 'analyzed/setDisplayedFile',
   setName: 'analyzed/setName',
   setType: 'analyzed/setType',
   setDuplicatedParts: 'analyzed/setDuplicatedParts',
@@ -12,6 +13,7 @@ export const analyzedNames = {
 export default {
   state: {
     file: [],
+    displayedFile: [],
     name: '',
     type: '',
     duplicatedParts: []
@@ -19,6 +21,9 @@ export default {
   mutations: {
     [analyzedNames.setFile] (state, file) {
       state.file = file
+    },
+    [analyzedNames.setDisplayedFile] (state, file) {
+      state.displayedFile = file
     },
     [analyzedNames.setName] (state, name) {
       state.name = name
@@ -30,11 +35,14 @@ export default {
       state.duplicatedParts = duplicatedParts
     },
     [analyzedNames.resetSecondaryState] (state) {
+      state.displayedFile = []
       state.name = ''
       state.type = ''
+      state.duplicatedParts = []
     },
     [analyzedNames.resetState] (state) {
       state.file = []
+      state.displayedFile = []
       state.name = ''
       state.type = ''
       state.duplicatedParts = []

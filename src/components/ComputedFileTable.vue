@@ -1,9 +1,17 @@
 <template>
   <div>
-    <el-table class="mb-50" :data="displayedFile" :max-height="800" :row-class-name="tableRowTypeGetter">
-      <el-table-column prop="line" label="№" width="70" />
-      <el-table-column prop="text" label="Text" />
-    </el-table>
+    <el-auto-resizer>
+      <template #default="{ width }">
+        <el-table-v2
+          class="mb-50"
+          :columns="columns"
+          :data="displayedFile"
+          :row-class="tableRowTypeGetter"
+          :width="width"
+          :height="800"
+        />
+      </template>
+    </el-auto-resizer>
     <el-row style="column-gap: 20px">
       <el-row align="middle">
         <div class="square" style="background: var(--el-color-info-light-9)" />
@@ -33,12 +41,26 @@ defineProps({
   }
 })
 
+const columns = [
+  {
+    key: 'line',
+    dataKey: 'line',
+    title: '№',
+    width: 70
+  },
+  {
+    key: 'text',
+    dataKey: 'text',
+    title: 'Text'
+  }
+]
+
 const store = useStore()
 
 const type = computed(() => store.state.analyzed.type)
 
-const tableRowTypeGetter = ({ row }) => {
-  const rowType = getRowType(row.text, type.value)
+const tableRowTypeGetter = ({ rowData }) => {
+  const rowType = getRowType(rowData.text, type.value)
   return `${rowType}-row`
 }
 </script>
@@ -50,15 +72,15 @@ const tableRowTypeGetter = ({ row }) => {
 }
 </style>
 <style>
-.el-table .comment-row {
-  --el-table-tr-bg-color: var(--el-color-primary-light-9);
+.comment-row, .comment-row:hover {
+  background: var(--el-color-primary-light-9);
 }
 
-.el-table .system-row {
-  --el-table-tr-bg-color: var(--el-color-info-light-9);
+.system-row, .system-row:hover {
+  background: var(--el-color-info-light-9);
 }
 
-.el-table .speech-row {
-  --el-table-tr-bg-color: var(--el-color-success-light-9);
+.speech-row, .speech-row:hover {
+  background: var(--el-color-success-light-9);
 }
 </style>

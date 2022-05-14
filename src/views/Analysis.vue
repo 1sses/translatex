@@ -5,7 +5,7 @@
       <el-row>
         <el-col :push="5">
           <div style="width: min-content;">
-            <DragDropUploader :file-raw="fileRaw" :file-loaded="!!fileRaw[0]" tip-text="Select file to analyze" />
+            <DragDropUploader :file-raw="fileRaw" :file-loaded="!!fileRaw[0]" tip-text="Select file to analyze"/>
           </div>
           <el-row class="mb-50" style="margin-top: 30px;">
             <el-button
@@ -17,7 +17,11 @@
             </el-button>
             <el-popconfirm title="Are you sure to reset a file?" @confirm="resetState">
               <template #reference>
-                <el-button circle type="warning"><el-icon><refresh/></el-icon></el-button>
+                <el-button circle type="warning">
+                  <el-icon>
+                    <refresh/>
+                  </el-icon>
+                </el-button>
               </template>
             </el-popconfirm>
           </el-row>
@@ -26,24 +30,24 @@
       <el-row v-if="file.length">
         <el-col>
           <h2>File information:</h2>
-          <h3>Name: <span class="highlighted">{{name}}</span></h3>
-          <h3>Length: <span class="highlighted">{{file.length}}</span> line{{file.length > 1 ? 's' : ''}}</h3>
-          <h3>Extension: <span class="highlighted">{{extension}}</span></h3>
-          <el-divider />
-          <h3>Enter-less length: <span class="highlighted">{{enterlessFile.length}}</span></h3>
-          <h3>Comment-less length: <span class="highlighted">{{commentlessFile.length}}</span></h3>
-          <h3>System lines:  <span class="highlighted">{{systemLinesCount}}</span></h3>
-          <h3>Max line length: <span class="highlighted">{{maxLineLength}}</span></h3>
-          <h3>Intended preset: <span class="highlighted">{{presets[type] ?? 'Unknown'}}</span></h3>
-          <el-divider />
+          <h3>Name: <span class="highlighted">{{ name }}</span></h3>
+          <h3>Length: <span class="highlighted">{{ file.length }}</span> line{{ file.length > 1 ? 's' : '' }}</h3>
+          <h3>Extension: <span class="highlighted">{{ extension }}</span></h3>
+          <el-divider/>
+          <h3>Enter-less length: <span class="highlighted">{{ enterlessFile.length }}</span></h3>
+          <h3>Comment-less length: <span class="highlighted">{{ commentlessFile.length }}</span></h3>
+          <h3>System lines: <span class="highlighted">{{ systemLinesCount }}</span></h3>
+          <h3>Max line length: <span class="highlighted">{{ maxLineLength }}</span></h3>
+          <h3>Intended preset: <span class="highlighted">{{ presets[type] ?? 'Unknown' }}</span></h3>
+          <el-divider/>
           <h3>Check syntax as:</h3>
           <el-radio-group v-model="type">
             <el-radio-button
-            v-for="(name, key) in presets"
-            :key="key"
-            :label="key === 'none' ? '' : key"
+              v-for="(name, key) in presets"
+              :key="key"
+              :label="key === 'none' ? '' : key"
             >
-              {{name}}
+              {{ name }}
             </el-radio-button>
           </el-radio-group>
         </el-col>
@@ -51,7 +55,7 @@
     </el-col>
     <el-col :span="18" :push="1">
       <h2>Computed file:</h2>
-      <ComputedFileTable :displayed-file="displayedFile" />
+      <ComputedFileTable :displayed-file="displayedFile"/>
     </el-col>
   </el-row>
 </template>
@@ -110,9 +114,11 @@ const maxLineLength = computed(() => Math.max(...commentlessFile.value.map(line 
 const start = () => {
   type.value = getAssumedFileType(file.value)
   duplicatedParts.value = getDuplicatedParts(enterlessFile.value)
+  console.log(duplicatedParts.value)
 }
 
 const confirmLoading = () => {
+  store.commit(analyzedNames.resetSecondaryState)
   file.value = fileRaw.value[0].raw
   fileRaw.value = []
 }
@@ -131,6 +137,7 @@ watch(file, () => {
 .mb-50 {
   margin-bottom: 50px;
 }
+
 .highlighted {
   font-size: 24px;
   color: #409EFF;

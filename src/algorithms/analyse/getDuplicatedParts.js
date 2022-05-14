@@ -22,6 +22,5 @@ export default function getDuplicatedParts (file) {
     }
     i += Math.max(...secondaryLengths)
   }
-  console.log('END', duplicatedParts)
   return duplicatedParts
 }

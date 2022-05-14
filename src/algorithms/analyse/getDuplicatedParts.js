@@ -23,7 +23,6 @@ export default function getDuplicatedParts (file) {
     }
     i += Math.max(...secondaryLengths)
   }
-  console.log(duplicatedParts.length)
 
   // collapse duplicated parts
   const collapsedDuplicatedParts = []

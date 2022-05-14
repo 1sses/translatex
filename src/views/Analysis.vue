@@ -50,6 +50,11 @@
               {{ name }}
             </el-radio-button>
           </el-radio-group>
+          <DuplicatedPartsModal
+            :duplicated-parts="duplicatedParts"
+            :intended-preset="type"
+            style="margin-top: 20px;"
+          />
         </el-col>
       </el-row>
     </el-col>
@@ -72,6 +77,7 @@ import getRowType from '@/algorithms/analyse/getRowType'
 import presets from '@/data/presets'
 import ComputedFileTable from '@/components/ComputedFileTable'
 import getDuplicatedParts from '@/algorithms/analyse/getDuplicatedParts'
+import DuplicatedPartsModal from '@/components/DuplicatedPartsModal'
 
 const store = useStore()
 
@@ -93,28 +99,17 @@ const duplicatedParts = computed({
   get: () => store.state.analyzed.duplicatedParts,
   set: (value) => store.commit(analyzedNames.setDuplicatedParts, value)
 })
-const displayedFile = computed(() => file.value.map((line, index) => ({
-  line: index + 1,
-  text: line
-})))
+const displayedFile = computed(() => file.value.map((line, index) => ({ line: index + 1, text: line })))
 const extension = computed(() => name.value.split('.').pop())
 const enterlessFile = computed(() => displayedFile.value.filter(line => line.text.trim()))
 const commentlessFile = computed(() => removeComments(enterlessFile.value, type.value))
-const systemLinesCount = computed(() => {
-  let count = 0
-  for (const line of commentlessFile.value) {
-    if (getRowType(line.text, type.value) === 'system') {
-      count++
-    }
-  }
-  return count
-})
+const systemLinesCount = computed(() =>
+  commentlessFile.value.reduce((count, line) => getRowType(line.text, type.value) === 'system' ? ++count : count, 0))
 const maxLineLength = computed(() => Math.max(...commentlessFile.value.map(line => line.text.length)))
 
 const start = () => {
   type.value = getAssumedFileType(file.value)
   duplicatedParts.value = getDuplicatedParts(enterlessFile.value)
-  console.log(duplicatedParts.value)
 }
 
 const confirmLoading = () => {

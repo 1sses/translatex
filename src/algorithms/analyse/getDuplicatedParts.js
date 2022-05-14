@@ -8,7 +8,7 @@ export default function getDuplicatedParts (file) {
         const index1 = file[i].line
         const index2 = file[j].line
         let length = 0
-        while (file[i + length].text === file[j].text) {
+        while (file[i + length] && file[j] && file[i + length].text === file[j].text) {
           length++
           j++
         }

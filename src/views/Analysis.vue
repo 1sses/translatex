@@ -113,7 +113,7 @@ const start = () => {
 }
 
 const confirmLoading = () => {
-  store.commit(analyzedNames.resetSecondaryState)
+  store.commit(analyzedNames.resetState)
   file.value = fileRaw.value[0].raw
   fileRaw.value = []
 }

@@ -125,12 +125,11 @@ const messages = computed({
 const currentStatusComputed = computed(() => statuses[currentStatus.value] ?? statuses.loading)
 
 const confirmLoading = () => {
+  store.commit(comparableNames.resetState)
   file1.value = file1Raw.value[0].raw
   file2.value = file2Raw.value[0].raw
-
   file1Raw.value = []
   file2Raw.value = []
-  store.commit(comparableNames.resetSecondaryState)
 }
 
 const resetState = () => {

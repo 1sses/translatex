@@ -7,8 +7,7 @@ export const comparableNames = {
   setCurrentStatus: 'comparable/setCurrentStatus',
   setNextSuccessLine: 'comparable/setNextSuccessLine',
   setMessages: 'comparable/setMessages',
-  resetState: 'comparable/resetState',
-  resetSecondaryState: 'comparable/resetSecondaryState'
+  resetState: 'comparable/resetState'
 }
 
 export default {
@@ -42,12 +41,6 @@ export default {
     [comparableNames.resetState] (state) {
       state.file1 = []
       state.file2 = []
-      state.currentIndex = 0
-      state.currentStatus = ''
-      state.nextSuccessLine = 0
-      state.messages = []
-    },
-    [comparableNames.resetSecondaryState] (state) {
       state.currentIndex = 0
       state.currentStatus = ''
       state.nextSuccessLine = 0

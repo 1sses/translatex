@@ -43,7 +43,10 @@
           </template>
         </el-progress>
       </el-row>
-      <el-col v-if="file2.length && currentStatus !== 'success'" style="margin-left: 50px">
+      <el-col
+        v-if="file2.length && currentStatus && currentStatus !== 'success'"
+        style="margin-left: 50px"
+      >
         <h2>Status:</h2>
         <h3>
           <span :style="{color: currentStatusComputed.color}">{{currentStatusComputed.text}}</span>

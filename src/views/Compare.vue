@@ -23,13 +23,13 @@
         </el-popconfirm>
       </el-row>
       <el-row justify="space-evenly" class="mb-50">
-        <div>
+        <el-col :span="13">
           <h3>Current state:</h3>
           <p>- Confirmed {{currentIndex}} / {{file1.length}} lines</p>
           <p>- Current line status:
             <span :style="{color: currentStatusComputed.color}">{{currentStatusComputed.text}}</span>
           </p>
-        </div>
+        </el-col>
         <el-progress
           :width="200"
           type="dashboard"
@@ -147,12 +147,19 @@ const start = () => {
   }
   cycleCompare()
 }
-const cycleCompare = async () => {
-  for (let i = currentIndex.value; i < file1.value.length; i++) {
-    const status = await asyncCompareHandler(i)
-    if (!status) return
+const cycleCompare = () => {
+  let i = currentIndex.value
+  const count = async () => {
+    do {
+      const status = await asyncCompareHandler(i)
+      if (!status) return
+      i++
+    } while (i % 666 !== 0 && i < file1.value.length)
+    if (i < file1.value.length) {
+      setTimeout(count)
+    } else ElMessage.success('Comparing finished!')
   }
-  ElMessage.success('Comparing finished!')
+  count()
 }
 
 const asyncCompareHandler = async (i) => {

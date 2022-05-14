@@ -8,7 +8,7 @@
           :data="displayedFile"
           :row-class="tableRowTypeGetter"
           :width="width"
-          :height="800"
+          :height="displayedFile.length ? 800 : 350"
         />
       </template>
     </el-auto-resizer>

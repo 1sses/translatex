@@ -23,6 +23,10 @@ export default function getCurrentLine (line1, line2, preset, mode) {
       }
       return line2
     default:
-      return line1
+      if (mode === 'manual') {
+        return line1
+      } else {
+        return line2
+      }
   }
 }

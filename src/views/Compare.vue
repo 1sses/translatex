@@ -25,7 +25,7 @@
       <el-row justify="space-evenly" class="mb-50">
         <el-col :span="13">
           <h3>Current state:</h3>
-          <p>- Confirmed {{currentIndex}} / {{file1.length}} lines</p>
+          <p>- Confirmed {{currentIndex}} / {{commonLines}} lines</p>
           <p>- Current line status:
             <span :style="{color: currentStatusComputed.color}">{{currentStatusComputed.text}}</span>
           </p>
@@ -35,7 +35,7 @@
           type="dashboard"
           :status="currentStatus"
           :stroke-width="15"
-          :percentage="+((currentIndex / file1.length * 100) || 0).toFixed(0)"
+          :percentage="+((currentIndex / commonLines * 100) || 0).toFixed(0)"
         >
           <template #default="{ percentage }">
             <span class="percentage-value">{{ percentage }}%</span>
@@ -54,7 +54,7 @@
         </h3>
         <h3 v-if="nextSuccessLine !== Infinity">
           The next completely matching line's in
-          <span style="color: #409eff">{{nextSuccessLine}}</span> line{{nextSuccessLine > 1 ? 's' : ''}}
+          <span style="color: #409eff">{{nextSuccessLine}}</span> line{{ isS(nextSuccessLine) }}
         </h3>
         <h3 v-else style="color: #F56C6C">
           There are no matching lines in the files left!<br>
@@ -83,7 +83,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
 import FilesDragUploader from '@/components/FilesDragUploader'
 import StatusMessages from '@/components/StatusMessages'
@@ -91,6 +91,7 @@ import statuses from '@/data/statuses'
 import { comparableNames } from '@/store/modules/comparable'
 import compareLines from '@/algorithms/compare/compareLines'
 import getNextSuccessLine from '@/algorithms/compare/getNextSuccessLine'
+import isS from '@/utils/isS'
 
 const store = useStore()
 
@@ -123,6 +124,7 @@ const messages = computed({
 })
 
 const currentStatusComputed = computed(() => statuses[currentStatus.value] ?? statuses.loading)
+const commonLines = computed(() => file1.value.length > file2.value.length ? file2.value.length : file1.value.length)
 
 const confirmLoading = () => {
   store.commit(comparableNames.resetState)
@@ -138,13 +140,28 @@ const resetState = () => {
   store.commit(comparableNames.resetState)
 }
 
-const start = () => {
+const start = async () => {
   if (file1.value.length !== file2.value.length) {
-    ElMessage.error('Files must have the same length')
-    store.commit(comparableNames.resetState)
-    return
-  }
-  cycleCompare()
+    ElMessageBox.confirm(
+      '<p style="margin-bottom: 10px;">Are you sure you want to compare files with different lengths?</p>' +
+        `File 1: ${file1.value.length} line${isS(file1.value.length)}<br>` +
+        `File 2: ${file2.value.length} line${isS(file2.value.length)}` +
+        '<p style="margin-top: 10px;">This will stop the comparison.</p>',
+      'Different files\' lengths',
+      {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        type: 'warning',
+        closeOnClickModal: false,
+        dangerouslyUseHTMLString: true
+      })
+      .then(() => {
+        cycleCompare()
+      })
+      .catch(() => {
+        store.commit(comparableNames.resetState)
+      })
+  } else cycleCompare()
 }
 const cycleCompare = () => {
   let i = currentIndex.value
@@ -153,8 +170,8 @@ const cycleCompare = () => {
       const status = await asyncCompareHandler(i)
       if (!status) return
       i++
-    } while (i % 166 !== 0 && i < file1.value.length)
-    if (i < file1.value.length) {
+    } while (i % 166 !== 0 && i < file1.value.length && i < file2.value.length)
+    if (i < file1.value.length && i < file2.value.length) {
       setTimeout(count)
     } else ElMessage.success('Comparing finished!')
   }
@@ -181,6 +198,11 @@ const asyncCompareHandler = async (i) => {
 
 const skipAndContinue = () => {
   currentIndex.value++
+  if (currentIndex.value >= commonLines.value) {
+    ElMessage.success('Comparing finished!')
+    currentStatus.value = ''
+    return
+  }
   cycleCompare()
 }
 

@@ -15,7 +15,7 @@
     <el-col>
       <el-row v-for="input in [['English', currentEnLine], ['Russian', currentRuLine]]" :key="input[0]">
         <h3>{{input[0]}} line:</h3>
-        <el-input class="line-field" :model-value="input[1]" size="large" readonly>
+        <el-input class="line-field" :model-value="input[1].trim()" size="large" readonly>
           <template #prepend>{{input[1].length}}</template>
           <template #append>
             <el-button circle text :icon="Aim" style="margin-bottom: 3px;" @click="setResult(input[1])" />
@@ -73,6 +73,7 @@ import getLocalstorageSize from '@/utils/getLocalstorageSize'
 import downloadTextFile from '@/utils/downloadTextFile'
 import presets from '@/data/presets'
 import { translatableNames } from '@/store/modules/translatable'
+import getCurrentLine from '@/algorithms/translate/getCurrentLine'
 
 const dialog = ref(false)
 const resultedLine = ref('')
@@ -99,10 +100,16 @@ const currentEnLine = computed(() => enFile.value[currentIndex.value] ?? '')
 const currentRuLine = computed(() => ruFile.value[currentIndex.value] ?? '')
 const latestLines = computed(() => translatedData.value.slice(-10))
 
-watch(currentRuLine, () => {
+watch(currentEnLine, () => {
   if (bufferTranslatedData.value.length) {
     resultedLine.value = bufferTranslatedData.value.at(-1).text
-  } else resultedLine.value = currentRuLine.value
+  } else {
+    resultedLine.value = getCurrentLine(
+      currentEnLine.value,
+      currentRuLine.value,
+      preset.value,
+      ruFile.value.length ? 'automatic' : 'manual')
+  }
 })
 
 watch(currentIndex, () => {

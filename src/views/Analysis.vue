@@ -31,7 +31,7 @@
         <el-col>
           <h2>File information:</h2>
           <h3>Name: <span class="highlighted">{{ name }}</span></h3>
-          <h3>Length: <span class="highlighted">{{ file.length }}</span> line{{ file.length > 1 ? 's' : '' }}</h3>
+          <h3>Length: <span class="highlighted">{{ file.length }}</span> line{{ isS(file.length) }}</h3>
           <h3>Extension: <span class="highlighted">{{ extension }}</span></h3>
           <el-divider/>
           <h3>Enter-less length: <span class="highlighted">{{ enterlessFile.length }}</span></h3>
@@ -78,6 +78,7 @@ import presets from '@/data/presets'
 import ComputedFileTable from '@/components/ComputedFileTable'
 import getDuplicatedParts from '@/algorithms/analyse/getDuplicatedParts'
 import DuplicatedPartsModal from '@/components/DuplicatedPartsModal'
+import isS from '@/utils/isS'
 
 const store = useStore()
 

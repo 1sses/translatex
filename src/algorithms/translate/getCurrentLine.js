@@ -14,7 +14,6 @@ export default function getCurrentLine (line1, line2, preset, mode) {
       }
       if (mode === 'manual') {
         const lineMatch = l1.match(/^[a-zA-Z]+\s"/)
-        console.log(lineMatch)
         if (lineMatch) {
           return startTabs + lineMatch + '"'
         } else if (l1.startsWith('"')) return startTabs + '""'

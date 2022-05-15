@@ -15,7 +15,7 @@
     <el-col>
       <el-row v-for="input in [['English', currentEnLine], ['Russian', currentRuLine]]" :key="input[0]">
         <h3>{{input[0]}} line:</h3>
-        <el-input class="line-field" :model-value="input[1].trim()" size="large" readonly>
+        <el-input class="line-field" :model-value="input[1]" size="large" readonly>
           <template #prepend>{{input[1].length}}</template>
           <template #append>
             <el-button circle text :icon="Aim" style="margin-bottom: 3px;" @click="setResult(input[1])" />
@@ -23,15 +23,16 @@
         </el-input>
       </el-row>
       <h2>In result:</h2>
-      <el-input class="line-field" v-model="resultedLine" size="large">
+      <el-input class="line-field" v-model="resultedLine" size="large" @keydown.enter="confirmLine">
         <template #prepend>{{resultedLine.length}}</template>
       </el-input>
       <el-row class="controls">
         <el-button
           size="large"
-          :disabled="!enFile.length || currentIndex === enFile.length"
+          :disabled="!enFile.length || currentIndex >= enFile.length"
           @click="confirmLine"
-        >Confirm line
+        >
+          Confirm line
         </el-button>
         <el-button-group size="large">
           <el-button :icon="ArrowLeft" :disabled="currentIndex === 0" @click="backHandler" />
@@ -140,6 +141,7 @@ const forwardHandler = () => {
 }
 
 const confirmLine = () => {
+  if (currentIndex.value >= enFile.value.length) return
   translatedData.value.push({
     line: currentIndex.value,
     text: resultedLine.value

@@ -146,7 +146,7 @@ const start = async () => {
       '<p style="margin-bottom: 10px;">Are you sure you want to compare files with different lengths?</p>' +
         `File 1: ${file1.value.length} line${isS(file1.value.length)}<br>` +
         `File 2: ${file2.value.length} line${isS(file2.value.length)}` +
-        '<p style="margin-top: 10px;">This will stop the comparison.</p>',
+        '<p style="margin-top: 10px;">Will be compared minimum lines.</p>',
       'Different files\' lengths',
       {
         confirmButtonText: 'Yes',

@@ -15,10 +15,10 @@
     <el-col>
       <el-row v-for="input in [['English', currentEnLine], ['Russian', currentRuLine]]" :key="input[0]">
         <h3>{{input[0]}} line:</h3>
-        <el-input class="line-field" :model-value="input[1]" size="large" disabled>
+        <el-input class="line-field" :model-value="input[1]" size="large" readonly>
           <template #prepend>{{input[1].length}}</template>
           <template #append>
-            <el-button :icon="Aim" style="margin-bottom: 4px;" @click="setResult(input[1])" />
+            <el-button circle text :icon="Aim" style="margin-bottom: 3px;" @click="setResult(input[1])" />
           </template>
         </el-input>
       </el-row>
@@ -194,12 +194,5 @@ const jumpToLine = (line) => {
   justify-content: space-between;
   width: 250px;
   margin-top: 40px;
-}
-</style>
-<style>
-.el-input.is-disabled .el-input__inner {
-  background-color: white;
-  color: #606266;
-  cursor: crosshair;
 }
 </style>

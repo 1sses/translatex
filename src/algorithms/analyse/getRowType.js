@@ -9,6 +9,7 @@ export default function getRowType (row, preset) {
       if (/^[a-zA-Z]+\s"/.test(formattedRow) || formattedRow.startsWith('"')) return 'speech'
       return ''
     default:
+      if (formattedRow.startsWith('//')) return 'comment'
       return ''
   }
 }

@@ -36,10 +36,6 @@ export default function getCurrentLine (line1, line2, preset, mode, yandexState)
       }
       return line2
     default:
-      if (mode === 'manual') {
-        return line1
-      } else {
-        return line2
-      }
+      return line2
   }
 }

@@ -20,7 +20,7 @@
           <el-button circle text :icon="Aim" class="mb-3" @click="setResult(currentEnLine)"/>
         </template>
       </el-input>
-      <el-row v-if="ruFile.length">
+      <el-row v-if="file2.length">
         <h3>Auxiliary line:</h3>
         <el-input class="line-field" :model-value="currentRuLine" size="large" readonly>
           <template #prepend>{{ currentRuLine.length }}</template>
@@ -36,7 +36,7 @@
       <el-row class="controls">
         <el-button
           size="large"
-          :disabled="!enFile.length || currentIndex >= enFile.length"
+          :disabled="!file1.length || currentIndex >= file1.length"
           @click="confirmLine"
         >
           Confirm line
@@ -48,8 +48,8 @@
       </el-row>
       <el-row class="stats">
         <el-col>
-          <h3>Lines done: {{ currentIndex }}/{{ enFile.length }}</h3>
-          <h3 v-if="enFile.length">
+          <h3>Lines done: {{ currentIndex }}/{{ file1.length }}</h3>
+          <h3 v-if="file1.length">
             Mode:
             <span :style="{color: mode.color}">
               {{ mode.text }}
@@ -59,8 +59,8 @@
         </el-col>
       </el-row>
       <GlobalTranslateControls
-        :en-file-length="enFile.length"
-        :work-ended="currentIndex === enFile.length"
+        :en-file-length="file1.length"
+        :work-ended="currentIndex === file1.length"
         @save-work="saveWork"
         @jump-to-line="jumpToLine"
       />
@@ -88,8 +88,8 @@ const resultedLine = ref('')
 
 const store = useStore()
 
-const enFile = computed(() => store.state.translatable.en)
-const ruFile = computed(() => store.state.translatable.ru)
+const file1 = computed(() => store.state.translatable.file1)
+const file2 = computed(() => store.state.translatable.file2)
 const preset = computed(() => store.state.translatable.preset)
 const currentIndex = computed({
   get: () => store.state.translatable.currentIndex,
@@ -104,12 +104,12 @@ const bufferTranslatedData = computed({
   set: (value) => store.commit(translatableNames.setBufferTranslatedData, value)
 })
 
-const currentEnLine = computed(() => enFile.value[currentIndex.value] ?? '')
-const currentRuLine = computed(() => ruFile.value[currentIndex.value] ?? '')
+const currentEnLine = computed(() => file1.value[currentIndex.value] ?? '')
+const currentRuLine = computed(() => file2.value[currentIndex.value] ?? '')
 const latestLines = computed(() => translatedData.value.slice(-10))
 const mode = computed(() => {
   if (store.state.yandex.useTranslation) return { text: 'AI', color: '#67c23a' }
-  else if (ruFile.value.length) return { text: 'Automatic', color: '#e6a23c' }
+  else if (file2.value.length) return { text: 'Automatic', color: '#e6a23c' }
   else return { text: 'Manual', color: '#f56c6c' }
 })
 
@@ -154,7 +154,7 @@ const forwardHandler = () => {
 }
 
 const confirmLine = () => {
-  if (currentIndex.value >= enFile.value.length) return
+  if (currentIndex.value >= file1.value.length) return
   translatedData.value.push({
     line: currentIndex.value,
     text: resultedLine.value
@@ -173,19 +173,19 @@ const saveWork = (shouldSplitFiles, filename) => {
     const fileExt = `.${filename.split('.').pop()}`
     downloadTextFile(
       filename.replace(fileExt, '_rest_1' + fileExt),
-      enFile.value.slice(currentIndex.value).join('\n').trim()
+      file1.value.slice(currentIndex.value).join('\n').trim()
     )
-    if (ruFile.value.length) {
+    if (file2.value.length) {
       downloadTextFile(
         filename.replace(fileExt, '_rest_2' + fileExt),
-        ruFile.value.slice(currentIndex.value).join('\n').trim()
+        file2.value.slice(currentIndex.value).join('\n').trim()
       )
     }
   }
 }
 
 const jumpToLine = (line) => {
-  if (!enFile.value.length) {
+  if (!file1.value.length) {
     ElMessage.error('You have to load English file first')
     return
   }

@@ -16,27 +16,27 @@ import { defineProps, defineEmits, computed } from 'vue'
 import DragDropUploader from '@/components/DragDropUploader'
 
 const props = defineProps({
-  enFileLoaded: {
+  file1Loaded: {
     type: Boolean,
     default: false
   },
-  ruFileLoaded: {
+  file2Loaded: {
     type: Boolean,
     default: false
   },
-  enFileRaw: {
+  file1Raw: {
     type: Array,
     required: true
   },
-  ruFileRaw: {
+  file2Raw: {
     type: Array,
     required: true
   },
-  enFileText: {
+  file1Text: {
     type: String,
     default: 'Select main file'
   },
-  ruFileText: {
+  file2Text: {
     type: String,
     default: 'Select auxiliary file'
   }
@@ -46,16 +46,16 @@ defineEmits(['enFileChange', 'ruFileChange'])
 
 const uploaders = computed(() => [
   {
-    file: props.enFileRaw,
+    file: props.file1Raw,
     change: 'enFileChange',
-    loaded: props.enFileLoaded,
-    text: props.enFileText
+    loaded: props.file1Loaded,
+    text: props.file1Text
   },
   {
-    file: props.ruFileRaw,
+    file: props.file2Raw,
     change: 'ruFileChange',
-    loaded: props.ruFileLoaded,
-    text: props.ruFileText
+    loaded: props.file2Loaded,
+    text: props.file2Text
   }
 ])
 </script>

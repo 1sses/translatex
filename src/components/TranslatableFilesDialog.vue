@@ -8,10 +8,10 @@
     </template>
     <h3>Translatable files:</h3>
     <FilesDragUploader
-      :en-file-raw="enFileRaw"
-      :ru-file-raw="ruFileRaw"
-      :en-file-loaded="!!enFile"
-      :ru-file-loaded="!!ruFile"
+      :file1-raw="file1Raw"
+      :file2-raw="file2Raw"
+      :file1-loaded="!!file1"
+      :file2-loaded="!!file2"
     />
     <h3>Translate preset: </h3>
     <el-radio-group v-model="preset">
@@ -38,7 +38,7 @@
         </div>
         <div>
           <el-button type="danger" @click="dialog = false">Cancel</el-button>
-          <el-button type="success" @click="confirmLoading" :disabled="!enFile">Confirm</el-button>
+          <el-button type="success" @click="confirmLoading" :disabled="!file1">Confirm</el-button>
         </div>
       </el-row>
     </template>
@@ -57,12 +57,12 @@ import { translatableNames } from '@/store/modules/translatable'
 
 const store = useStore()
 
-const enFileRaw = ref([])
-const ruFileRaw = ref([])
+const file1Raw = ref([])
+const file2Raw = ref([])
 const preset = ref('none')
 
-const enFile = computed(() => enFileRaw.value[0])
-const ruFile = computed(() => ruFileRaw.value[0])
+const file1 = computed(() => file1Raw.value[0])
+const file2 = computed(() => file2Raw.value[0])
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
@@ -73,14 +73,14 @@ const dialog = computed({
 })
 
 const checkFilesAfterLoading = () => {
-  if (store.state.translatable.en.length === 0) {
+  if (store.state.translatable.file1.length === 0) {
     setTimeout(checkFilesAfterLoading, 100)
   } else {
-    if (store.state.translatable.en.length !== store.state.translatable.ru.length &&
-      store.state.translatable.ru.length !== 0) {
+    if (store.state.translatable.file1.length !== store.state.translatable.file2.length &&
+      store.state.translatable.file2.length !== 0) {
       ElMessage.error('Files have different length! It may cause an error!')
-      enFileRaw.value = []
-      ruFileRaw.value = []
+      file1Raw.value = []
+      file2Raw.value = []
       store.commit(translatableNames.resetPrimaryState)
     } else {
       dialog.value = false
@@ -88,16 +88,15 @@ const checkFilesAfterLoading = () => {
   }
 }
 const confirmLoading = () => {
-  store.dispatch(translatableNames.setEn, enFile.value.raw)
-  store.dispatch(translatableNames.setRu, ruFile.value?.raw)
+  store.dispatch(translatableNames.setFile1, file1.value.raw)
+  store.dispatch(translatableNames.setFile2, file2.value?.raw)
   store.commit(translatableNames.setPreset, preset.value)
   store.commit(translatableNames.resetSecondaryState)
   checkFilesAfterLoading()
 }
 const resetState = () => {
-  enFileRaw.value = []
-  ruFileRaw.value = []
-  preset.value = 'none'
+  file1Raw.value = []
+  file2Raw.value = []
   store.commit(translatableNames.resetState)
 }
 const restoreBackup = () => {

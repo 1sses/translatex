@@ -114,7 +114,8 @@ watch(currentEnLine, () => {
       currentEnLine.value,
       currentRuLine.value,
       preset.value,
-      mode.value.text)
+      mode.value.text,
+      store.state.yandex)
   }
 })
 

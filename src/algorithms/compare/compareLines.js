@@ -8,7 +8,6 @@ export default function compareLines (line1, line2) {
   const l2 = line2.trim()
   if (l1.length !== l2.length || l1 !== l2) {
     status = 'warning'
-    helper.push('Different lines')
     const l1pLess = getPunctuationLessString(l1)
     const l2pLess = getPunctuationLessString(l2)
     if (l1pLess !== l2pLess) {

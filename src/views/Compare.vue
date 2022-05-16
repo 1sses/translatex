@@ -52,6 +52,9 @@
           <span :style="{color: currentStatusComputed.color}">{{currentStatusComputed.text}}</span>
           occurred in line {{currentIndex + 1}}
         </h3>
+        <h3>
+          Message text: <span :style="{color: currentStatusComputed.color }">{{messages.at(-1).helper}}</span>
+        </h3>
         <h3 v-if="nextSuccessLine !== Infinity">
           The next completely matching line's in
           <span style="color: #409eff">{{nextSuccessLine}}</span> line{{ isS(nextSuccessLine) }}

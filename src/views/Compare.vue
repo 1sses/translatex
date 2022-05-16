@@ -3,12 +3,12 @@
     <el-col :span="8">
       <h2 class="mb-50">Load files to compare:</h2>
       <FilesDragUploader
-        :en-file-raw="file1Raw"
-        :ru-file-raw="file2Raw"
-        :en-file-loaded="!!file1Raw[0]"
-        :ru-file-loaded="!!file2Raw[0]"
-        en-file-text="Select first file"
-        ru-file-text="Select second file"
+        :file1-raw="file1Raw"
+        :file2-raw="file2Raw"
+        :file1-loaded="!!file1Raw[0]"
+        :file2-loaded="!!file2Raw[0]"
+        file1-text="Select first file"
+        file2-text="Select second file"
       />
       <el-row justify="center" class="mb-50" style="margin-top: 30px;">
         <el-button

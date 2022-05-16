@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" @click="drawer = true" size="large" text bg>
+    <el-button @click="drawer = true" size="large" text>
       <el-image :src="translate" />
     </el-button>
     <el-drawer

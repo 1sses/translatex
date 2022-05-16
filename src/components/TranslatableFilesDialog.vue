@@ -10,8 +10,8 @@
     <FilesDragUploader
       :file1-raw="file1Raw"
       :file2-raw="file2Raw"
-      :file1-loaded="!!file1"
-      :file2-loaded="!!file2"
+      :file1-loaded="!!file1Raw[0]"
+      :file2-loaded="!!file2Raw[0]"
     />
     <h3>Translate preset: </h3>
     <el-radio-group v-model="preset">
@@ -38,7 +38,7 @@
         </div>
         <div>
           <el-button type="danger" @click="dialog = false">Cancel</el-button>
-          <el-button type="success" @click="confirmLoading" :disabled="!file1">Confirm</el-button>
+          <el-button type="success" @click="confirmLoading" :disabled="!file1Raw[0]">Confirm</el-button>
         </div>
       </el-row>
     </template>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits, ref } from 'vue'
+import { computed, defineProps, defineEmits, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { Refresh, RefreshLeft } from '@element-plus/icons-vue'
@@ -59,10 +59,19 @@ const store = useStore()
 
 const file1Raw = ref([])
 const file2Raw = ref([])
-const preset = ref('none')
 
-const file1 = computed(() => file1Raw.value[0])
-const file2 = computed(() => file2Raw.value[0])
+const file1 = computed({
+  get: () => store.state.translatable.file1,
+  set: (value) => store.dispatch(translatableNames.setFile1, value)
+})
+const file2 = computed({
+  get: () => store.state.translatable.file2,
+  set: (value) => store.dispatch(translatableNames.setFile2, value)
+})
+const preset = computed({
+  get: () => store.state.translatable.preset,
+  set: (value) => store.commit(translatableNames.setPreset, value)
+})
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
@@ -73,36 +82,37 @@ const dialog = computed({
 })
 
 const checkFilesAfterLoading = () => {
-  if (store.state.translatable.file1.length === 0) {
-    setTimeout(checkFilesAfterLoading, 100)
+  if (file1.value.length !== file2.value.length) {
+    ElMessage.error('Files have different length! It may cause an error!')
+    file1Raw.value = []
+    file2Raw.value = []
+    store.commit(translatableNames.resetPrimaryState)
   } else {
-    if (store.state.translatable.file1.length !== store.state.translatable.file2.length &&
-      store.state.translatable.file2.length !== 0) {
-      ElMessage.error('Files have different length! It may cause an error!')
-      file1Raw.value = []
-      file2Raw.value = []
-      store.commit(translatableNames.resetPrimaryState)
-    } else {
-      dialog.value = false
-    }
+    dialog.value = false
   }
 }
+
 const confirmLoading = () => {
-  store.dispatch(translatableNames.setFile1, file1.value.raw)
-  store.dispatch(translatableNames.setFile2, file2.value?.raw)
-  store.commit(translatableNames.setPreset, preset.value)
+  file1.value = file1Raw.value[0].raw
+  file2.value = file2Raw.value[0]?.raw
   store.commit(translatableNames.resetSecondaryState)
-  checkFilesAfterLoading()
 }
+
 const resetState = () => {
   file1Raw.value = []
   file2Raw.value = []
   store.commit(translatableNames.resetState)
 }
+
 const restoreBackup = () => {
   const data = JSON.parse(localStorage.getItem('translated') ?? '[]')
   downloadTextFile('restore.txt', data.join('\n').trim())
 }
+
+watch(file2, () => {
+  if (file2.value.length) checkFilesAfterLoading()
+  else dialog.value = false
+})
 </script>
 
 <style scoped>

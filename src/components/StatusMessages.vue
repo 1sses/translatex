@@ -6,7 +6,7 @@
     >
       <template #title>
         <h3>
-          <span :style="{color: message.type.color}">{{message.type.text}}</span>
+          <span v-color="message.type.color">{{message.type.text}}</span>
           in line <span style="font-size: 20px">{{message.line}}</span>
         </h3>
       </template>

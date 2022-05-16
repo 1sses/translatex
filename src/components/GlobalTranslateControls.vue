@@ -24,7 +24,7 @@
       </el-input>
       <el-row class="warnings">
         <el-col>
-          <h3 v-if="(workEnded || notEndedAction) && fileName" style="color: green">Everything's ok, ready to save!</h3>
+          <h3 v-if="(workEnded || notEndedAction) && fileName" v-color="'green'">Everything's ok, ready to save!</h3>
           <h3 v-else style="color: red">Having conflicts with saving!</h3>
           <ul>
             <li v-if="!fileName">Define file's name to save!</li>

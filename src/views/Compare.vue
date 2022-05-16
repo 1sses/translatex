@@ -29,7 +29,7 @@
           <h3>Current state:</h3>
           <p>- Confirmed {{currentIndex}} / {{commonLines}} lines</p>
           <p>- Current line status:
-            <span :style="{color: currentStatusComputed.color}">{{currentStatusComputed.text}}</span>
+            <span :v-color="currentStatusComputed.color">{{currentStatusComputed.text}}</span>
           </p>
         </el-col>
         <el-progress
@@ -51,17 +51,17 @@
       >
         <h2>Status:</h2>
         <h3>
-          <span :style="{color: currentStatusComputed.color}">{{currentStatusComputed.text}}</span>
+          <span v-color="currentStatusComputed.color">{{currentStatusComputed.text}}</span>
           occurred in line {{currentIndex + 1}}
         </h3>
         <h3>
-          Message text: <span :style="{color: currentStatusComputed.color }">{{messages.at(-1).helper}}</span>
+          Message text: <span v-color="currentStatusComputed.color">{{messages.at(-1).helper}}</span>
         </h3>
         <h3 v-if="nextSuccessLine !== Infinity">
           The next completely matching line's in
-          <span style="color: #409eff">{{nextSuccessLine}}</span> line{{ isS(nextSuccessLine) }}
+          <span v-color="'#409eff'">{{nextSuccessLine}}</span> line{{ isS(nextSuccessLine) }}
         </h3>
-        <h3 v-else style="color: #F56C6C">
+        <h3 v-else v-color="'#F56C6C'">
           There are no matching lines in the files left!<br>
           It's recommended to stop the comparison!
         </h3>

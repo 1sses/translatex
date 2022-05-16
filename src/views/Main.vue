@@ -51,11 +51,11 @@
           <h3>Lines done: {{ currentIndex }}/{{ file1.length }}</h3>
           <h3 v-if="file1.length">
             Mode:
-            <span :style="{color: mode.color}">
+            <span v-color="mode.color">
               {{ mode.text }}
             </span>
           </h3>
-          <h3>Preset: <span style="color: #409eff">{{ presets[preset] }}</span></h3>
+          <h3>Preset: <span v-color="'#409eff'">{{ presets[preset] }}</span></h3>
         </el-col>
       </el-row>
       <GlobalTranslateControls

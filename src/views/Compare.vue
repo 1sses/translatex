@@ -7,6 +7,8 @@
         :ru-file-raw="file2Raw"
         :en-file-loaded="!!file1Raw[0]"
         :ru-file-loaded="!!file2Raw[0]"
+        en-file-text="Select first file"
+        ru-file-text="Select second file"
       />
       <el-row justify="center" class="mb-50" style="margin-top: 30px;">
         <el-button

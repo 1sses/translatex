@@ -31,6 +31,14 @@ const props = defineProps({
   ruFileRaw: {
     type: Array,
     required: true
+  },
+  enFileText: {
+    type: String,
+    default: 'Select main file'
+  },
+  ruFileText: {
+    type: String,
+    default: 'Select auxiliary file'
   }
 })
 
@@ -41,13 +49,13 @@ const uploaders = computed(() => [
     file: props.enFileRaw,
     change: 'enFileChange',
     loaded: props.enFileLoaded,
-    text: 'Select main file'
+    text: props.enFileText
   },
   {
     file: props.ruFileRaw,
     change: 'ruFileChange',
     loaded: props.ruFileLoaded,
-    text: 'Select auxiliary file'
+    text: props.ruFileText
   }
 ])
 </script>

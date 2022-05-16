@@ -44,8 +44,8 @@
           <h3>Lines done: {{currentIndex}}/{{enFile.length}}</h3>
           <h3 v-if="enFile.length">
             Mode:
-            <span :style="{color: ruFile.length ? 'green' : 'red'}">
-              {{ruFile.length ? 'automatic' : 'manual'}}
+            <span :style="{color: mode.color}">
+              {{mode.text}}
             </span>
           </h3>
           <h3>Preset: <span style="color: #409eff">{{presets[preset]}}</span></h3>
@@ -100,6 +100,11 @@ const bufferTranslatedData = computed({
 const currentEnLine = computed(() => enFile.value[currentIndex.value] ?? '')
 const currentRuLine = computed(() => ruFile.value[currentIndex.value] ?? '')
 const latestLines = computed(() => translatedData.value.slice(-10))
+const mode = computed(() => {
+  if (localStorage.getItem('yandex-translate-api-key')) return { text: 'AI', color: '#67c23a' }
+  else if (ruFile.value.length) return { text: 'Automatic', color: '#e6a23c' }
+  else return { text: 'Manual', color: '#f56c6c' }
+})
 
 watch(currentEnLine, () => {
   if (bufferTranslatedData.value.length) {

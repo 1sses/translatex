@@ -172,13 +172,15 @@ const saveWork = (shouldSplitFiles, filename) => {
   if (shouldSplitFiles) {
     const fileExt = `.${filename.split('.').pop()}`
     downloadTextFile(
-      filename.replace(fileExt, '_rest_en' + fileExt),
+      filename.replace(fileExt, '_rest_1' + fileExt),
       enFile.value.slice(currentIndex.value).join('\n').trim()
     )
-    downloadTextFile(
-      filename.replace(fileExt, '_rest_ru' + fileExt),
-      ruFile.value.slice(currentIndex.value).join('\n').trim()
-    )
+    if (ruFile.value.length) {
+      downloadTextFile(
+        filename.replace(fileExt, '_rest_2' + fileExt),
+        ruFile.value.slice(currentIndex.value).join('\n').trim()
+      )
+    }
   }
 }
 

@@ -101,7 +101,7 @@ const currentEnLine = computed(() => enFile.value[currentIndex.value] ?? '')
 const currentRuLine = computed(() => ruFile.value[currentIndex.value] ?? '')
 const latestLines = computed(() => translatedData.value.slice(-10))
 const mode = computed(() => {
-  if (localStorage.getItem('yandex-translate-api-key')) return { text: 'AI', color: '#67c23a' }
+  if (store.state.yandex.useTranslation) return { text: 'AI', color: '#67c23a' }
   else if (ruFile.value.length) return { text: 'Automatic', color: '#e6a23c' }
   else return { text: 'Manual', color: '#f56c6c' }
 })
@@ -114,7 +114,7 @@ watch(currentEnLine, () => {
       currentEnLine.value,
       currentRuLine.value,
       preset.value,
-      ruFile.value.length ? 'automatic' : 'manual')
+      mode.value.text)
   }
 })
 

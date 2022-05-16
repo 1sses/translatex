@@ -14,17 +14,29 @@
       <h3>Yandex.Cloud console and API-key required.</h3>
       <el-divider style="margin-bottom: 40px;" />
       <h4 style="margin-bottom: 10px;">API-key:</h4>
-      <el-input v-model="key"  size="large" @input="apiKeyChange" />
+      <el-input v-model="key"  size="large" @input="apiKeyHandler" />
       <h4 style="margin: 30px 0 10px;">Translation languages:</h4>
       <el-row justify="space-evenly" align="middle">
-        <el-select v-model="sourceLang" placeholder="Source language" class="lang-select" @change="sourceLangChange">
+        <el-select v-model="sourceLang" placeholder="Source language" class="lang-select">
           <el-option label="English" value="en" />
         </el-select>
         <el-icon><DArrowRight /></el-icon>
-        <el-select v-model="targetLang" placeholder="Target language" class="lang-select" @change="targetLangChange">
+        <el-select v-model="targetLang" placeholder="Target language" class="lang-select">
           <el-option label="Russian" value="ru" />
         </el-select>
       </el-row>
+      <div v-if="key">
+        <el-divider style="margin-bottom: 40px;" />
+        <h4 style="margin-bottom: 10px;">Use Yandex.Translate now?</h4>
+        <el-switch
+          v-model="useTranslation"
+          size="large"
+          active-text="Yes"
+          active-color="#67c23a"
+          inactive-text="No"
+          inactive-color="#f56c6c"
+        />
+      </div>
       <template #footer>
         <h3>Powered by <el-link type="primary" href="https://translate.yandex.ru">Yandex.Translator</el-link></h3>
       </template>
@@ -33,28 +45,49 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 import translate from '@/translate.svg'
 import { DArrowRight } from '@element-plus/icons-vue'
+import { yandexNames } from '@/store/modules/yandex'
+
+const store = useStore()
 
 const drawer = ref(false)
-const key = ref(localStorage.getItem('yandex-translate-api-key') || '')
-const sourceLang = ref(localStorage.getItem('yandex-translate-source-lang') || '')
-const targetLang = ref(localStorage.getItem('yandex-translate-target-lang') || '')
+const key = computed({
+  get: () => store.state.yandex.key,
+  set: (value) => store.commit(yandexNames.setKey, value)
+})
+const sourceLang = computed({
+  get: () => store.state.yandex.sourceLang,
+  set: (value) => store.commit(yandexNames.setSourceLang, value)
+})
+const targetLang = computed({
+  get: () => store.state.yandex.targetLang,
+  set: (value) => store.commit(yandexNames.setTargetLang, value)
+})
+const useTranslation = computed({
+  get: () => store.state.yandex.useTranslation,
+  set: (value) => store.commit(yandexNames.setUseTranslation, value)
+})
 
-const apiKeyChange = () => {
-  localStorage.setItem('yandex-translate-api-key', key.value)
-}
-const sourceLangChange = () => {
-  localStorage.setItem('yandex-translate-source-lang', sourceLang.value)
-}
-const targetLangChange = () => {
-  localStorage.setItem('yandex-translate-target-lang', targetLang.value)
+const apiKeyHandler = () => {
+  if (!key.value) {
+    store.commit(yandexNames.setUseTranslation, false)
+  }
 }
 </script>
 
 <style scoped>
 .lang-select {
   width: 40%;
+}
+</style>
+<style>
+.el-switch__label--right.is-active {
+  color: #67c23a !important;
+}
+.el-switch__label--left.is-active {
+  color: #F56C6C !important;
 }
 </style>

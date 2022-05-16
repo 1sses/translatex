@@ -8,11 +8,19 @@
       direction="rtl"
     >
       <template #title>
-        <h2>Yandex.Translate</h2>
+        <el-row align="middle">
+          <h2>Yandex.Translate</h2>
+          <el-tooltip placement="bottom-end" effect="dark">
+            <template #content>
+              <h3>Use Yandex translation API to translate your files easily!</h3>
+              <h3>Yandex.Cloud console and API-key required.</h3>
+            </template>
+            <el-button text circle size="large">
+              <el-icon><InfoFilled /></el-icon>
+            </el-button>
+          </el-tooltip>
+        </el-row>
       </template>
-      <h3>Use Yandex translation API to translate your files easily!</h3>
-      <h3>Yandex.Cloud console and API-key required.</h3>
-      <el-divider style="margin-bottom: 40px;" />
       <h4 style="margin-bottom: 10px;">API-key:</h4>
       <el-input v-model="key"  size="large" @input="apiKeyHandler" />
       <h4 style="margin: 30px 0 10px;">Translation languages:</h4>
@@ -48,7 +56,7 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import translate from '@/translate.svg'
-import { DArrowRight } from '@element-plus/icons-vue'
+import { DArrowRight, InfoFilled } from '@element-plus/icons-vue'
 import { yandexNames } from '@/store/modules/yandex'
 
 const store = useStore()

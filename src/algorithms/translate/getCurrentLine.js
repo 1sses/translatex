@@ -12,7 +12,7 @@ export default function getCurrentLine (line1, line2, preset, mode, yandexState)
       if (rowType !== 'speech') {
         return line1
       }
-      if (mode === 'manual') {
+      if (mode === 'Manual') {
         const lineMatch = l1.match(/^[a-zA-Z]+\s"/)
         if (lineMatch) {
           return startTabs + lineMatch + '"'

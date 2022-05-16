@@ -41,13 +41,13 @@ const uploaders = computed(() => [
     file: props.enFileRaw,
     change: 'enFileChange',
     loaded: props.enFileLoaded,
-    text: 'Select english file'
+    text: 'Select main file'
   },
   {
     file: props.ruFileRaw,
     change: 'ruFileChange',
     loaded: props.ruFileLoaded,
-    text: 'Select russian file'
+    text: 'Select auxiliary file'
   }
 ])
 </script>

@@ -11,20 +11,27 @@
         <files/>
       </el-icon>
     </el-button>
-    <TranslatableFilesDialog v-model="dialog" />
+    <TranslatableFilesDialog v-model="dialog"/>
     <el-col>
-      <el-row v-for="input in [['English', currentEnLine], ['Russian', currentRuLine]]" :key="input[0]">
-        <h3>{{input[0]}} line:</h3>
-        <el-input class="line-field" :model-value="input[1]" size="large" readonly>
-          <template #prepend>{{input[1].length}}</template>
+      <h3>Main line:</h3>
+      <el-input class="line-field" :model-value="currentEnLine" size="large" readonly>
+        <template #prepend>{{ currentEnLine.length }}</template>
+        <template #append>
+          <el-button circle text :icon="Aim" class="mb-3" @click="setResult(currentEnLine)"/>
+        </template>
+      </el-input>
+      <el-row v-if="ruFile.length">
+        <h3>Auxiliary line:</h3>
+        <el-input class="line-field" :model-value="currentRuLine" size="large" readonly>
+          <template #prepend>{{ currentRuLine.length }}</template>
           <template #append>
-            <el-button circle text :icon="Aim" style="margin-bottom: 3px;" @click="setResult(input[1])" />
+            <el-button circle text :icon="Aim" class="mb-3" @click="setResult(currentRuLine)"/>
           </template>
         </el-input>
       </el-row>
       <h2>In result:</h2>
       <el-input class="line-field" v-model="resultedLine" size="large" @keydown.enter="confirmLine">
-        <template #prepend>{{resultedLine.length}}</template>
+        <template #prepend>{{ resultedLine.length }}</template>
       </el-input>
       <el-row class="controls">
         <el-button
@@ -35,20 +42,20 @@
           Confirm line
         </el-button>
         <el-button-group size="large">
-          <el-button :icon="ArrowLeft" :disabled="currentIndex === 0" @click="backHandler" />
-          <el-button :icon="ArrowRight" :disabled="!bufferTranslatedData.length" @click="forwardHandler" />
+          <el-button :icon="ArrowLeft" :disabled="currentIndex === 0" @click="backHandler"/>
+          <el-button :icon="ArrowRight" :disabled="!bufferTranslatedData.length" @click="forwardHandler"/>
         </el-button-group>
       </el-row>
       <el-row class="stats">
         <el-col>
-          <h3>Lines done: {{currentIndex}}/{{enFile.length}}</h3>
+          <h3>Lines done: {{ currentIndex }}/{{ enFile.length }}</h3>
           <h3 v-if="enFile.length">
             Mode:
             <span :style="{color: mode.color}">
-              {{mode.text}}
+              {{ mode.text }}
             </span>
           </h3>
-          <h3>Preset: <span style="color: #409eff">{{presets[preset]}}</span></h3>
+          <h3>Preset: <span style="color: #409eff">{{ presets[preset] }}</span></h3>
         </el-col>
       </el-row>
       <GlobalTranslateControls
@@ -57,7 +64,7 @@
         @save-work="saveWork"
         @jump-to-line="jumpToLine"
       />
-      <LastTranslatedTable :latest-lines="latestLines" />
+      <LastTranslatedTable :latest-lines="latestLines"/>
     </el-col>
   </el-container>
 </template>
@@ -209,5 +216,9 @@ const jumpToLine = (line) => {
   justify-content: space-between;
   width: 250px;
   margin-top: 40px;
+}
+
+.mb-3 {
+  margin-bottom: 3px;
 }
 </style>

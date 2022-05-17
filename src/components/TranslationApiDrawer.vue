@@ -55,7 +55,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
-import translate from '@/translate.svg'
+import translate from '@/assets/images/translate.svg'
 import { DArrowRight, InfoFilled } from '@element-plus/icons-vue'
 import { yandexNames } from '@/store/modules/yandex'
 
